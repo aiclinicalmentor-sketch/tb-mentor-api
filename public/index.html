@@ -3,33 +3,298 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TB Mentor API</title>
+  <title>TB Mentor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    body { font-family: Arial, sans-serif; max-width: 720px; margin: 40px auto; line-height: 1.6; color: #1f2933; padding: 0 16px; }
-    code { background: #f2f4f7; padding: 2px 4px; border-radius: 4px; }
-    pre { background: #f2f4f7; padding: 12px; border-radius: 6px; overflow-x: auto; }
-    h1 { margin-bottom: 0; }
-    small { color: #52616b; }
+    :root {
+      --bg: #0f1724;
+      --card: #121b2b;
+      --text: #e8eef6;
+      --muted: #9fb2c8;
+      --accent: #4cc9f0;
+      --accent-strong: #7c3aed;
+      --border: rgba(255, 255, 255, 0.08);
+      --shadow: 0 20px 60px rgba(12, 19, 33, 0.6);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at 20% 20%, rgba(124, 58, 237, 0.18), transparent 40%),
+                  radial-gradient(circle at 80% 0%, rgba(76, 201, 240, 0.18), transparent 35%),
+                  var(--bg);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 18px 48px;
+    }
+    .shell {
+      width: 100%;
+      max-width: 1080px;
+      background: rgba(13, 18, 31, 0.7);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+      backdrop-filter: blur(6px);
+    }
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 22px;
+    }
+    .title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .badge {
+      background: rgba(76, 201, 240, 0.15);
+      color: var(--accent);
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.02em;
+      border: 1px solid rgba(76, 201, 240, 0.4);
+    }
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: -0.01em;
+    }
+    p.lead {
+      margin: 6px 0 0;
+      color: var(--muted);
+      max-width: 720px;
+      line-height: 1.5;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    textarea {
+      width: 100%;
+      min-height: 140px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--text);
+      padding: 14px;
+      font-size: 15px;
+      line-height: 1.5;
+      resize: vertical;
+      transition: border 0.2s, box-shadow 0.2s;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: rgba(76, 201, 240, 0.7);
+      box-shadow: 0 0 0 3px rgba(76, 201, 240, 0.14);
+    }
+    .actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    button {
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      color: #0b1220;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 12px 30px rgba(124, 58, 237, 0.25);
+      transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    }
+    button:hover { transform: translateY(-1px); box-shadow: 0 16px 34px rgba(124, 58, 237, 0.28); }
+    button:disabled { opacity: 0.55; cursor: not-allowed; transform: none; box-shadow: none; }
+    .hint {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .samples {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .pill {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--text);
+      cursor: pointer;
+      transition: border 0.2s, transform 0.12s ease;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    .pill:hover { border-color: rgba(76, 201, 240, 0.6); transform: translateY(-1px); }
+    .output {
+      min-height: 140px;
+      white-space: pre-wrap;
+      color: var(--text);
+      line-height: 1.55;
+      font-size: 15px;
+    }
+    .output .placeholder { color: var(--muted); }
+    .status {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+    .error { color: #ff8a8a; }
+    .success { color: #7ef7c6; }
+    @media (max-width: 640px) {
+      body { padding: 16px; }
+      .shell { padding: 20px; }
+    }
   </style>
 </head>
 <body>
-  <h1>TB Mentor API</h1>
-  <small>Deployed on Vercel</small>
-  <p>This project exposes serverless API routes. The root path is static; call the endpoints below:</p>
-  <ul>
-    <li><code>POST /api/tb-mentor</code> — chat endpoint. Body: <code>{ "message": "clinical question" }</code></li>
-    <li><code>POST /api/tb-rag-query</code> — retrieve guideline passages. Body includes <code>question</code>.</li>
-    <li><code>POST /api/tb_peds_tda</code> — pediatric TB TDA score (requires <code>Authorization: Bearer &lt;TB_PEDS_TDA_API_KEY&gt;</code>).</li>
-  </ul>
-  <p>Environment variables expected:</p>
-  <ul>
-    <li><code>OPENAI_API_KEY</code></li>
-    <li><code>TB_PEDS_TDA_API_KEY</code></li>
-    <li><code>TB_MENTOR_BASE_URL</code> (optional; set if calling other deployed routes)</li>
-  </ul>
-  <p>Example <code>curl</code> to test locally or in production:</p>
-  <pre>curl -X POST https://tb-mentor-api.vercel.app/api/tb-mentor \
-  -H "Content-Type: application/json" \
-  -d '{ "message": "How to manage TB/HIV co-infection in a 5 year old?" }'</pre>
+  <div class="shell">
+    <header>
+      <div>
+        <div class="title">
+          <div class="badge">Clinician-first</div>
+          <h1>TB Mentor</h1>
+        </div>
+        <p class="lead">Ask clinical TB questions and receive guideline-grounded answers. The API uses your configured credentials on the server—no keys are exposed in this page.</p>
+      </div>
+    </header>
+
+    <div class="card">
+      <label for="prompt">Your question</label>
+      <textarea id="prompt" placeholder="Example: 32-year-old with MDR-TB, HIV+, weight 54 kg, baseline creatinine elevated. How to adjust regimen and monitor renal function?"></textarea>
+      <div class="actions">
+        <button id="askBtn">Ask TB Mentor</button>
+        <span class="hint" id="statusHint">Server calls run on Vercel; responses may take a few seconds.</span>
+      </div>
+      <div class="samples" id="samples">
+        <div class="pill">How should I start TB preventive therapy in a 6-year-old exposed to MDR-TB but asymptomatic?</div>
+        <div class="pill">Adult with diabetes and smear-positive pulmonary TB starting rifampicin—what drug interactions and monitoring are needed?</div>
+        <div class="pill">Pregnant patient (28 weeks) with TB/HIV coinfection and low CD4—recommended regimen and fetal considerations?</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <label>Response</label>
+      <div class="output" id="output"><span class="placeholder">No response yet. Ask a question to see the mentor's guidance.</span></div>
+      <div class="status" id="status"></div>
+    </div>
+  </div>
+
+  <script>
+    const promptEl = document.getElementById("prompt");
+    const askBtn = document.getElementById("askBtn");
+    const outputEl = document.getElementById("output");
+    const statusEl = document.getElementById("status");
+    const hintEl = document.getElementById("statusHint");
+
+    document.querySelectorAll(".pill").forEach((pill) => {
+      pill.addEventListener("click", () => {
+        promptEl.value = pill.textContent.trim();
+        promptEl.focus();
+      });
+    });
+
+    function setBusy(isBusy, message) {
+      askBtn.disabled = isBusy;
+      statusEl.textContent = message || "";
+      if (isBusy) {
+        statusEl.classList.remove("error", "success");
+      }
+    }
+
+    function renderOutput(text) {
+      if (!text) {
+        outputEl.innerHTML = '<span class="placeholder">No response yet.</span>';
+        return;
+      }
+      const safe = text
+        .split("\\n\\n")
+        .map((para) => para.trim())
+        .filter(Boolean)
+        .map((para) => {
+          const escaped = para
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+          return "<p>" + escaped.replace(/\\n/g, "<br>") + "</p>";
+        })
+        .join("");
+      outputEl.innerHTML = safe;
+    }
+
+    async function askMentor() {
+      const message = promptEl.value.trim();
+      if (!message) {
+        statusEl.textContent = "Please enter a question.";
+        statusEl.classList.add("error");
+        return;
+      }
+      statusEl.classList.remove("error", "success");
+      renderOutput("");
+      setBusy(true, "Thinking...");
+      hintEl.textContent = "Running serverless call to /api/tb-mentor";
+
+      try {
+        const res = await fetch("/api/tb-mentor", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message })
+        });
+
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          const errMsg = data?.error || "Request failed";
+          statusEl.textContent = errMsg;
+          statusEl.classList.add("error");
+          renderOutput("");
+          return;
+        }
+        renderOutput(data.output || "No content returned.");
+        statusEl.textContent = "Answer ready.";
+        statusEl.classList.add("success");
+      } catch (err) {
+        statusEl.textContent = "Network or server error. Try again.";
+        statusEl.classList.add("error");
+        renderOutput("");
+      } finally {
+        setBusy(false, "");
+        hintEl.textContent = "Server calls run on Vercel; responses may take a few seconds.";
+      }
+    }
+
+    askBtn.addEventListener("click", askMentor);
+    promptEl.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+        askMentor();
+      }
+    });
+  </script>
 </body>
 </html>
