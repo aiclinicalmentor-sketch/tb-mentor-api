@@ -243,15 +243,33 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { message } = req.body || {};
+  const { message, history } = req.body || {};
 
   if (!message || typeof message !== "string") {
     return res.status(400).json({ error: "Missing 'message' in request body" });
   }
 
+  if (history && !Array.isArray(history)) {
+    return res.status(400).json({ error: "'history' must be an array" });
+  }
+
+  // Keep a small, validated history so conversation context can be reused.
+  const sanitizedHistory = (Array.isArray(history) ? history : [])
+    .filter(
+      (h) =>
+        h &&
+        typeof h === "object" &&
+        (h.role === "user" || h.role === "assistant") &&
+        typeof h.content === "string" &&
+        h.content.trim()
+    )
+    .slice(-12) // cap history depth
+    .map((h) => ({ role: h.role, content: h.content.trim() }));
+
   try {
     const messages = [
       { role: "system", content: SYSTEM_PROMPT },
+      ...sanitizedHistory,
       { role: "user", content: message }
     ];
 

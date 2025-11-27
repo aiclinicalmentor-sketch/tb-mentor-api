@@ -10,93 +10,107 @@
   <style>
     :root {
       --bg: #0f1724;
-      --card: #121b2b;
-      --text: #e8eef6;
-      --muted: #9fb2c8;
+      --panel: #111a2a;
+      --surface: #0c1624;
+      --text: #eaf1fb;
+      --muted: #94a5bc;
       --accent: #4cc9f0;
       --accent-strong: #7c3aed;
       --border: rgba(255, 255, 255, 0.08);
-      --shadow: 0 20px 60px rgba(12, 19, 33, 0.6);
+      --shadow: 0 20px 60px rgba(6, 12, 24, 0.6);
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
       min-height: 100vh;
       font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
-      background: radial-gradient(circle at 20% 20%, rgba(124, 58, 237, 0.18), transparent 40%),
-                  radial-gradient(circle at 80% 0%, rgba(76, 201, 240, 0.18), transparent 35%),
+      background: radial-gradient(circle at 18% 18%, rgba(124, 58, 237, 0.18), transparent 40%),
+                  radial-gradient(circle at 78% 0%, rgba(76, 201, 240, 0.18), transparent 35%),
                   var(--bg);
       color: var(--text);
+      padding: 32px 16px 48px;
       display: flex;
-      align-items: center;
       justify-content: center;
-      padding: 32px 18px 48px;
     }
     .shell {
       width: 100%;
-      max-width: 1080px;
-      background: rgba(13, 18, 31, 0.7);
+      max-width: 1200px;
+      background: rgba(10, 15, 26, 0.8);
       border: 1px solid var(--border);
       border-radius: 18px;
       box-shadow: var(--shadow);
-      padding: 28px;
+      padding: 26px;
       backdrop-filter: blur(6px);
     }
     header {
       display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      align-items: flex-start;
       justify-content: space-between;
-      margin-bottom: 22px;
-    }
-    .title {
-      display: flex;
-      align-items: center;
       gap: 12px;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      margin-bottom: 20px;
     }
+    h1 { margin: 0; font-size: 28px; letter-spacing: -0.02em; }
     .badge {
-      background: rgba(76, 201, 240, 0.15);
+      background: rgba(76, 201, 240, 0.16);
       color: var(--accent);
       padding: 6px 10px;
       border-radius: 999px;
-      font-weight: 600;
       font-size: 12px;
+      font-weight: 700;
       letter-spacing: 0.02em;
       border: 1px solid rgba(76, 201, 240, 0.4);
     }
-    h1 {
-      margin: 0;
-      font-size: 28px;
-      letter-spacing: -0.01em;
-    }
-    p.lead {
-      margin: 6px 0 0;
-      color: var(--muted);
-      max-width: 720px;
-      line-height: 1.5;
+    .lead { color: var(--muted); margin: 6px 0 0; line-height: 1.55; max-width: 780px; }
+    .grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 16px;
     }
     .card {
-      background: var(--card);
+      background: var(--panel);
       border: 1px solid var(--border);
       border-radius: 14px;
-      padding: 18px;
-      margin-bottom: 14px;
+      padding: 16px;
     }
-    label {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--muted);
-      font-weight: 500;
+    .chat {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      height: 100%;
     }
+    .chat-window {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      height: 460px;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+    }
+    .msg {
+      max-width: 86%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      line-height: 1.5;
+      font-size: 15px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .msg.user { margin-left: auto; background: linear-gradient(135deg, #4cc9f0, #7c3aed); color: #0b1220; }
+    .msg.assistant { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border); }
+    .msg.system { background: rgba(255, 255, 255, 0.02); border: 1px dashed var(--border); color: var(--muted); }
+    .input-area { display: flex; gap: 10px; align-items: flex-start; }
     textarea {
-      width: 100%;
-      min-height: 140px;
+      flex: 1;
+      min-height: 80px;
+      max-height: 140px;
       border-radius: 12px;
       border: 1px solid var(--border);
       background: rgba(255, 255, 255, 0.02);
       color: var(--text);
-      padding: 14px;
+      padding: 12px;
       font-size: 15px;
       line-height: 1.5;
       resize: vertical;
@@ -107,40 +121,24 @@
       border-color: rgba(76, 201, 240, 0.7);
       box-shadow: 0 0 0 3px rgba(76, 201, 240, 0.14);
     }
-    .actions {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      margin-top: 12px;
-      flex-wrap: wrap;
-    }
     button {
       background: linear-gradient(135deg, var(--accent), var(--accent-strong));
       color: #0b1220;
       border: none;
       border-radius: 12px;
-      padding: 12px 18px;
+      padding: 12px 16px;
       font-weight: 700;
       font-size: 15px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      box-shadow: 0 12px 30px rgba(124, 58, 237, 0.25);
+      box-shadow: 0 12px 28px rgba(124, 58, 237, 0.26);
       transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+      white-space: nowrap;
     }
     button:hover { transform: translateY(-1px); box-shadow: 0 16px 34px rgba(124, 58, 237, 0.28); }
-    button:disabled { opacity: 0.55; cursor: not-allowed; transform: none; box-shadow: none; }
-    .hint {
-      color: var(--muted);
-      font-size: 13px;
-    }
-    .samples {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 10px;
-      margin-top: 10px;
-    }
+    button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
     .pill {
       border: 1px solid var(--border);
       border-radius: 12px;
@@ -150,27 +148,23 @@
       cursor: pointer;
       transition: border 0.2s, transform 0.12s ease;
       font-size: 14px;
-      line-height: 1.4;
+      line-height: 1.45;
     }
-    .pill:hover { border-color: rgba(76, 201, 240, 0.6); transform: translateY(-1px); }
-    .output {
-      min-height: 140px;
-      white-space: pre-wrap;
-      color: var(--text);
-      line-height: 1.55;
-      font-size: 15px;
-    }
-    .output .placeholder { color: var(--muted); }
-    .status {
-      font-size: 13px;
-      color: var(--muted);
-      margin-top: 6px;
-    }
+    .pill:hover { border-color: rgba(76, 201, 240, 0.7); transform: translateY(-1px); }
+    .samples { display: grid; gap: 10px; }
+    .status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
     .error { color: #ff8a8a; }
     .success { color: #7ef7c6; }
-    @media (max-width: 640px) {
-      body { padding: 16px; }
-      .shell { padding: 20px; }
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    @media (max-width: 960px) {
+      .grid { grid-template-columns: 1fr; }
+      .chat-window { height: 420px; }
     }
   </style>
 </head>
@@ -178,41 +172,132 @@
   <div class="shell">
     <header>
       <div>
-        <div class="title">
+        <div class="row" style="margin-top:0">
           <div class="badge">Clinician-first</div>
           <h1>TB Mentor</h1>
         </div>
-        <p class="lead">Ask clinical TB questions and receive guideline-grounded answers. The API uses your configured credentials on the server—no keys are exposed in this page.</p>
+        <p class="lead">Hold a conversation about a patient. Messages stay in context; calls run server-side with your configured credentials.</p>
       </div>
+      <button id="resetBtn" style="background: transparent; color: var(--muted); border: 1px solid var(--border); box-shadow: none;">New conversation</button>
     </header>
 
-    <div class="card">
-      <label for="prompt">Your question</label>
-      <textarea id="prompt" placeholder="Example: 32-year-old with MDR-TB, HIV+, weight 54 kg, baseline creatinine elevated. How to adjust regimen and monitor renal function?"></textarea>
-      <div class="actions">
-        <button id="askBtn">Ask TB Mentor</button>
-        <span class="hint" id="statusHint">Server calls run on Vercel; responses may take a few seconds.</span>
+    <div class="grid">
+      <div class="card chat">
+        <div class="chat-window" id="chatWindow">
+          <div class="msg system">This assistant reasons over TB guidelines and your configured tools. It cannot see PHI beyond what you share.</div>
+        </div>
+        <div class="input-area">
+          <textarea id="prompt" placeholder="Share your case and question. Shift+Enter for a new line. Enter to send."></textarea>
+          <button id="askBtn">Send</button>
+        </div>
+        <div class="status" id="status">Ready.</div>
       </div>
-      <div class="samples" id="samples">
-        <div class="pill">How should I start TB preventive therapy in a 6-year-old exposed to MDR-TB but asymptomatic?</div>
-        <div class="pill">Adult with diabetes and smear-positive pulmonary TB starting rifampicin—what drug interactions and monitoring are needed?</div>
-        <div class="pill">Pregnant patient (28 weeks) with TB/HIV coinfection and low CD4—recommended regimen and fetal considerations?</div>
-      </div>
-    </div>
 
-    <div class="card">
-      <label>Response</label>
-      <div class="output" id="output"><span class="placeholder">No response yet. Ask a question to see the mentor's guidance.</span></div>
-      <div class="status" id="status"></div>
+      <div class="card">
+        <p style="margin:0 0 10px; color: var(--muted);">Quick starters</p>
+        <div class="samples" id="samples">
+          <div class="pill">32-year-old with MDR-TB, HIV+, weight 54 kg, baseline creatinine elevated. How to adjust regimen and monitor renal function?</div>
+          <div class="pill">Pregnant patient (28 weeks) with TB/HIV coinfection and low CD4 — recommended regimen and fetal considerations?</div>
+          <div class="pill">Six-year-old exposed to MDR-TB, asymptomatic. Should I start preventive therapy and which regimen?</div>
+          <div class="pill">Adult with diabetes and smear-positive pulmonary TB starting rifampicin — drug interactions and monitoring plan?</div>
+        </div>
+        <p class="status" style="margin-top:12px;">Server endpoints: <code>/api/tb-mentor</code>, <code>/api/tb-rag-query</code>, <code>/api/tb_peds_tda</code>.</p>
+      </div>
     </div>
   </div>
 
   <script>
     const promptEl = document.getElementById("prompt");
     const askBtn = document.getElementById("askBtn");
-    const outputEl = document.getElementById("output");
+    const resetBtn = document.getElementById("resetBtn");
+    const chatWindow = document.getElementById("chatWindow");
     const statusEl = document.getElementById("status");
-    const hintEl = document.getElementById("statusHint");
+
+    let history = [];
+    let sending = false;
+
+    function scrollToBottom() {
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    function renderMessages() {
+      chatWindow.innerHTML = "";
+      for (const m of history) {
+        const div = document.createElement("div");
+        div.className = "msg " + (m.role || "assistant");
+        div.textContent = m.content;
+        chatWindow.appendChild(div);
+      }
+      scrollToBottom();
+    }
+
+    function setStatus(text, className) {
+      statusEl.textContent = text || "";
+      statusEl.className = "status" + (className ? " " + className : "");
+    }
+
+    async function sendMessage() {
+      if (sending) return;
+      const message = promptEl.value.trim();
+      if (!message) {
+        setStatus("Please enter a question.", "error");
+        return;
+      }
+
+      sending = true;
+      askBtn.disabled = true;
+      setStatus("Thinking...");
+
+      // Add user message locally
+      history.push({ role: "user", content: message });
+      renderMessages();
+      promptEl.value = "";
+
+      try {
+        const convoForApi = history.filter(
+          (h) => h.role === "user" || h.role === "assistant"
+        );
+
+        const res = await fetch("/api/tb-mentor", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message, history: convoForApi })
+        });
+
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          setStatus(data?.error || "Request failed.", "error");
+          return;
+        }
+
+        const output = data.output || "No content returned.";
+        history.push({ role: "assistant", content: output });
+        renderMessages();
+        setStatus("Answer ready.", "success");
+      } catch (err) {
+        setStatus("Network or server error. Try again.", "error");
+      } finally {
+        sending = false;
+        askBtn.disabled = false;
+        promptEl.focus();
+      }
+    }
+
+    askBtn.addEventListener("click", sendMessage);
+    promptEl.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    resetBtn.addEventListener("click", () => {
+      history = [{ role: "system", content: "This assistant reasons over TB guidelines and your configured tools. It cannot see PHI beyond what you share." }];
+      renderMessages();
+      setStatus("Ready.");
+      promptEl.value = "";
+      promptEl.focus();
+    });
 
     document.querySelectorAll(".pill").forEach((pill) => {
       pill.addEventListener("click", () => {
@@ -221,80 +306,10 @@
       });
     });
 
-    function setBusy(isBusy, message) {
-      askBtn.disabled = isBusy;
-      statusEl.textContent = message || "";
-      if (isBusy) {
-        statusEl.classList.remove("error", "success");
-      }
-    }
-
-    function renderOutput(text) {
-      if (!text) {
-        outputEl.innerHTML = '<span class="placeholder">No response yet.</span>';
-        return;
-      }
-      const safe = text
-        .split("\\n\\n")
-        .map((para) => para.trim())
-        .filter(Boolean)
-        .map((para) => {
-          const escaped = para
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;");
-          return "<p>" + escaped.replace(/\\n/g, "<br>") + "</p>";
-        })
-        .join("");
-      outputEl.innerHTML = safe;
-    }
-
-    async function askMentor() {
-      const message = promptEl.value.trim();
-      if (!message) {
-        statusEl.textContent = "Please enter a question.";
-        statusEl.classList.add("error");
-        return;
-      }
-      statusEl.classList.remove("error", "success");
-      renderOutput("");
-      setBusy(true, "Thinking...");
-      hintEl.textContent = "Running serverless call to /api/tb-mentor";
-
-      try {
-        const res = await fetch("/api/tb-mentor", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message })
-        });
-
-        const data = await res.json().catch(() => ({}));
-        if (!res.ok) {
-          const errMsg = data?.error || "Request failed";
-          statusEl.textContent = errMsg;
-          statusEl.classList.add("error");
-          renderOutput("");
-          return;
-        }
-        renderOutput(data.output || "No content returned.");
-        statusEl.textContent = "Answer ready.";
-        statusEl.classList.add("success");
-      } catch (err) {
-        statusEl.textContent = "Network or server error. Try again.";
-        statusEl.classList.add("error");
-        renderOutput("");
-      } finally {
-        setBusy(false, "");
-        hintEl.textContent = "Server calls run on Vercel; responses may take a few seconds.";
-      }
-    }
-
-    askBtn.addEventListener("click", askMentor);
-    promptEl.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
-        askMentor();
-      }
-    });
+    // seed initial system message
+    history = [{ role: "system", content: "This assistant reasons over TB guidelines and your configured tools. It cannot see PHI beyond what you share." }];
+    renderMessages();
+    setStatus("Ready.");
   </script>
 </body>
 </html>
