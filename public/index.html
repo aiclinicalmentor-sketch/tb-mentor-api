@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TB Mentor API</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 720px; margin: 40px auto; line-height: 1.6; color: #1f2933; padding: 0 16px; }
+    code { background: #f2f4f7; padding: 2px 4px; border-radius: 4px; }
+    pre { background: #f2f4f7; padding: 12px; border-radius: 6px; overflow-x: auto; }
+    h1 { margin-bottom: 0; }
+    small { color: #52616b; }
+  </style>
+</head>
+<body>
+  <h1>TB Mentor API</h1>
+  <small>Deployed on Vercel</small>
+  <p>This project exposes serverless API routes. The root path is static; call the endpoints below:</p>
+  <ul>
+    <li><code>POST /api/tb-mentor</code> — chat endpoint. Body: <code>{ "message": "clinical question" }</code></li>
+    <li><code>POST /api/tb-rag-query</code> — retrieve guideline passages. Body includes <code>question</code>.</li>
+    <li><code>POST /api/tb_peds_tda</code> — pediatric TB TDA score (requires <code>Authorization: Bearer &lt;TB_PEDS_TDA_API_KEY&gt;</code>).</li>
+  </ul>
+  <p>Environment variables expected:</p>
+  <ul>
+    <li><code>OPENAI_API_KEY</code></li>
+    <li><code>TB_PEDS_TDA_API_KEY</code></li>
+    <li><code>TB_MENTOR_BASE_URL</code> (optional; set if calling other deployed routes)</li>
+  </ul>
+  <p>Example <code>curl</code> to test locally or in production:</p>
+  <pre>curl -X POST https://tb-mentor-api.vercel.app/api/tb-mentor \
+  -H "Content-Type: application/json" \
+  -d '{ "message": "How to manage TB/HIV co-infection in a 5 year old?" }'</pre>
+</body>
+</html>
