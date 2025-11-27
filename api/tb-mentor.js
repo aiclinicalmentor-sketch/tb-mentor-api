@@ -217,7 +217,12 @@ async function callRag(args) {
   });
 
   if (!res.ok) {
-    throw new Error(`tb-rag-query error: ${res.status} ${res.statusText}`);
+    let detail = "";
+    try {
+      const body = await res.json();
+      detail = body?.error ? ` - ${body.error}` : "";
+    } catch (_) {}
+    throw new Error(`tb-rag-query error: ${res.status} ${res.statusText}${detail}`);
   }
 
   return await res.json();
@@ -321,6 +326,9 @@ export default async function handler(req, res) {
     }
   } catch (err) {
     console.error("TB Mentor error:", err);
-    return res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({
+      error: "Internal server error",
+      detail: err?.message || null
+    });
   }
 }
