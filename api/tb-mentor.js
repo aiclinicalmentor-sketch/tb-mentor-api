@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import OpenAI from "openai";
 
 /**
@@ -14,7 +16,7 @@ const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
 
-// ⬇⬇⬇ "System prompt comes from my last custom GPT Instructions 
+// vvv System prompt comes from my last custom GPT instructions
 const SYSTEM_PROMPT = fs.readFileSync(
   path.join(process.cwd(), "prompts/mentor-system.txt"),
   "utf8"
@@ -107,7 +109,7 @@ const tools = [
             type: "string",
             description:
               "Age band used for age-specific tachycardia and tachypnoea thresholds.",
-            enum: ["<2m", "2–12m", "1–5y", ">5y"]
+            enum: ["<2m", "2-12m", "1-5y", ">5y"]
           },
           symptoms: {
             type: "object",

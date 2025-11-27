@@ -79,15 +79,15 @@ export default async function handler(req, res) {
 function isTachypnoeic(age, rr) {
   if (rr == null) return false;
   if (age === "<2m") return rr >= 60;
-  if (age === "2–12m") return rr >= 50;
-  if (age === "1–5y") return rr >= 40;
+  if (age === "2-12m") return rr >= 50;
+  if (age === "1-5y") return rr >= 40;
   return rr >= 30; // >5y
 }
 function isTachycardic(age, hr) {
   if (hr == null) return false;
   if (age === "<2m") return hr >= 170;
-  if (age === "2–12m") return hr >= 160;
-  if (age === "1–5y") return hr >= 140;
+  if (age === "2-12m") return hr >= 160;
+  if (age === "1-5y") return hr >= 140;
   return hr >= 120; // >5y
 }
 function human(k) {
