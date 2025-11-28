@@ -446,7 +446,7 @@
         <div class="input-area">
           <textarea
             id="prompt"
-            placeholder="Describe the patient and your question…"
+            placeholder="Type here…"
           ></textarea>
           <button id="askBtn">Send</button>
         </div>
@@ -670,7 +670,6 @@
       sending = true;
       askBtn.disabled = true;
       setStatus("", "");
-      addThinkingBubble();
 
       if (explicitMessage == null) {
         updateSnapshotFromMessage(message);
@@ -681,6 +680,8 @@
       if (explicitMessage == null) {
         promptEl.value = "";
       }
+
+      addThinkingBubble();
 
       try {
         const convoForApi = history.filter(
