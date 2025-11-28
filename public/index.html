@@ -62,17 +62,14 @@
       border: 1px solid rgba(76, 201, 240, 0.4);
     }
     .lead { color: var(--muted); margin: 6px 0 0; line-height: 1.55; max-width: 780px; }
-    .grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 16px;
-    }
+    .grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
     .card {
       background: var(--panel);
       border: 1px solid var(--border);
       border-radius: 14px;
       padding: 16px;
     }
+    .quickstarters { display: none; }
     .chat {
       display: flex;
       flex-direction: column;
@@ -139,19 +136,6 @@
     }
     button:hover { transform: translateY(-1px); box-shadow: 0 16px 34px rgba(124, 58, 237, 0.28); }
     button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
-    .pill {
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px;
-      background: rgba(255, 255, 255, 0.02);
-      color: var(--text);
-      cursor: pointer;
-      transition: border 0.2s, transform 0.12s ease;
-      font-size: 14px;
-      line-height: 1.45;
-    }
-    .pill:hover { border-color: rgba(76, 201, 240, 0.7); transform: translateY(-1px); }
-    .samples { display: grid; gap: 10px; }
     .status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
     .error { color: #ff8a8a; }
     .success { color: #7ef7c6; }
@@ -191,9 +175,10 @@
           <button id="askBtn">Send</button>
         </div>
         <div class="status" id="status">Ready.</div>
+        <p class="status" style="margin-top:12px;">Server endpoints: <code>/api/tb-mentor</code>, <code>/api/tb-rag-query</code>, <code>/api/tb_peds_tda</code>.</p>
       </div>
 
-      <div class="card">
+      <div class="card quickstarters">
         <p style="margin:0 0 10px; color: var(--muted);">Quick starters</p>
         <div class="samples" id="samples">
           <div class="pill">32-year-old with MDR-TB, HIV+, weight 54 kg, baseline creatinine elevated. How to adjust regimen and monitor renal function?</div>
