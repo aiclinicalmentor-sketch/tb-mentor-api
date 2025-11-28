@@ -36,8 +36,9 @@ unless the user is explicitly asking a purely factual/non-clinical question abou
 
 For real patients, always construct a CASE SUMMARY, TASK, and RAG FOCUS in your message,
 then call this tool with a compact, embedding-friendly question string that encodes patient, problem, task, and context.
-`, +
-        "Use this before giving any case-specific TB explanation or reasoning.",
+
+Use this before giving any case-specific TB explanation or reasoning.
+`,
       parameters: {
         type: "object",
         additionalProperties: false,
