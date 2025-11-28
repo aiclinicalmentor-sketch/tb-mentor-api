@@ -277,19 +277,13 @@
       gap: 12px;
     }
 
-    /* On larger screens, float the right-hand panel near the bottom-right of the shell */
+    /* Keep the right-hand panel (case summary, mentor status, tone)
+       visible on larger screens without covering the chat */
     @media (min-width: 960px) {
       .side-panel {
-        position: fixed;
-        bottom: 12px;
-        right: max(8px, calc((100vw - 1200px) / 2 + 8px));
-        width: 320px;
-        max-height: calc(100vh - 120px);
-        overflow-y: auto;
-        z-index: 40;
-      }
-      .grid {
-        grid-template-columns: minmax(0, 1fr);
+        position: sticky;
+        top: 72px;
+        align-self: flex-start;
       }
     }
     .section-title {
