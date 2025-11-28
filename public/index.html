@@ -321,6 +321,17 @@
       letter-spacing: 0.12em;
       color: var(--muted);
     }
+    .tone-select {
+      width: 100%;
+      max-width: 220px;
+      margin-top: 6px;
+      padding: 6px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      font-size: 12px;
+      color: var(--text);
+    }
     .mode-pill-value {
       font-size: 13px;
     }
@@ -449,7 +460,23 @@
               <span class="mode-pill-label">Risk posture</span>
               <span class="mode-pill-value" id="riskLabel">Conservative</span>
             </div>
+            <div class="mode-pill">
+              <span class="mode-pill-label">Tone</span>
+              <span class="mode-pill-value" id="toneLabel">General doctor</span>
+            </div>
           </div>
+        </div>
+
+        <div style="margin-top: 10px;">
+          <p class="section-title">Tone</p>
+          <select id="toneSelect" class="tone-select">
+            <option value="basic_clinical" data-label="Basic clinical">Basic clinical</option>
+            <option value="general_doctor" data-label="General doctor" selected>General doctor</option>
+            <option value="specialist" data-label="Specialist">Specialist</option>
+          </select>
+          <p class="snapshot-help">
+            Controls how simple or detailed the mentor's language is (for nurses, general doctors, or specialists).
+          </p>
         </div>
       </div>
     </div>
@@ -472,11 +499,14 @@
     const siteProfileLabel = document.getElementById("siteProfileLabel");
     const resourceLabel = document.getElementById("resourceLabel");
     const riskLabel = document.getElementById("riskLabel");
+    const toneLabel = document.getElementById("toneLabel");
+    const toneSelect = document.getElementById("toneSelect");
 
     let history = [];
     let sending = false;
     let showReasoning = false;
     let thinkingNode = null;
+    let currentTone = "general_doctor";
 
     function scrollToBottom() {
       chatWindow.scrollTop = chatWindow.scrollHeight;
@@ -643,7 +673,7 @@
         const res = await fetch("/api/tb-mentor", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message, history: convoForApi })
+          body: JSON.stringify({ message, history: convoForApi, tone: currentTone })
         });
 
         const data = await res.json().catch(() => ({}));
@@ -685,6 +715,7 @@
           if (mentorStatus.siteProfile && siteProfileLabel) siteProfileLabel.textContent = mentorStatus.siteProfile;
           if (mentorStatus.resourceSetting && resourceLabel) resourceLabel.textContent = mentorStatus.resourceSetting;
           if (mentorStatus.riskPosture && riskLabel) riskLabel.textContent = mentorStatus.riskPosture;
+          if (mentorStatus.tone && toneLabel) toneLabel.textContent = mentorStatus.tone;
         }
 
         history.push({
@@ -753,6 +784,18 @@
       showReasoning = e.target.checked;
       renderMessages();
     });
+
+    if (toneSelect) {
+      toneSelect.addEventListener("change", () => {
+        currentTone = toneSelect.value;
+        const selected = toneSelect.options[toneSelect.selectedIndex];
+        const labelText = selected.getAttribute("data-label") || selected.textContent;
+        if (toneLabel) toneLabel.textContent = labelText;
+      });
+    }
+    if (toneLabel) {
+      toneLabel.textContent = "General doctor";
+    }
 
     setStatus("", "");
   </script>
