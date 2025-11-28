@@ -402,7 +402,7 @@
     <header>
       <div>
         <div class="row" style="margin-top:0">
-          
+
           <h1>TB Mentor</h1>
         </div>
         <p class="lead">
@@ -456,6 +456,7 @@
       <div class="card side-panel">
         <div>
           <p class="section-title">Case snapshot</p>
+          <p class="snapshot-help" id="caseSummaryText"></p>
           <p class="snapshot-help">
             Key facts stay pinned here. You can edit at any time; this does not change previous messages.
           </p>
@@ -513,6 +514,11 @@
     const snapWeight = document.getElementById("snapWeight");
     const snapHiv = document.getElementById("snapHiv");
     const snapPreg = document.getElementById("snapPreg");
+    const snapTb = document.getElementById("snapTb");
+    const snapComorbid = document.getElementById("snapComorbid");
+    const snapRegimen = document.getElementById("snapRegimen");
+    const snapDanger = document.getElementById("snapDanger");
+    const caseSummaryText = document.getElementById("caseSummaryText");
 
     let history = [];
     let sending = false;
@@ -635,12 +641,15 @@
     function updateSnapshotFromMessage(text) {
       if (!text) return;
 
-      const ageMatch = text.match(/(\d{1,2})-year-old/i);
+      const ageMatch =
+        text.match(/(\d{1,2})\s*-\s*year-old/i) ||
+        text.match(/(\d{1,2})\s*year[s]?\s*old/i) ||
+        text.match(/(\d{1,2})\s*(yo|y\/o)\b/i);
       if (ageMatch && !snapAge.value) {
         snapAge.value = ageMatch[1] + " y";
       }
 
-      const weightMatch = text.match(/(\d{1,3})\s?(kg|kilograms?)/i);
+      const weightMatch = text.match(/(\d{1,3})\s?(kg|kgs|kilograms?)/i);
       if (weightMatch && !snapWeight.value) {
         snapWeight.value = weightMatch[1] + " kg";
       }
@@ -718,6 +727,24 @@
         const reasoning =
           data.reasoningSummary || data.reasoning_summary || data.reasoning || null;
 
+        const caseSummary = data.caseSummary || null;
+        const snapshot = data.snapshot || null;
+
+        if (caseSummaryText) {
+          caseSummaryText.textContent = caseSummary || "";
+        }
+
+        if (snapshot) {
+          if (!snapAge.value && snapshot.ageSex) snapAge.value = snapshot.ageSex;
+          if (!snapWeight.value && snapshot.weight) snapWeight.value = snapshot.weight;
+          if (!snapHiv.value && snapshot.hiv) snapHiv.value = snapshot.hiv;
+          if (!snapPreg.value && snapshot.pregnancy) snapPreg.value = snapshot.pregnancy;
+          if (!snapTb.value && snapshot.tbProfile) snapTb.value = snapshot.tbProfile;
+          if (!snapComorbid.value && snapshot.comorbidities) snapComorbid.value = snapshot.comorbidities;
+          if (!snapRegimen.value && snapshot.regimen) snapRegimen.value = snapshot.regimen;
+          if (!snapDanger.value && snapshot.danger) snapDanger.value = snapshot.danger;
+        }
+
         history.push({
           role: "assistant",
           content: output,
@@ -778,6 +805,11 @@
       snapWeight.value = "";
       snapHiv.value = "";
       snapPreg.value = "";
+      snapTb.value = "";
+      snapComorbid.value = "";
+      snapRegimen.value = "";
+      snapDanger.value = "";
+      if (caseSummaryText) caseSummaryText.textContent = "";
     });
 
     reasoningToggle.addEventListener("change", (e) => {

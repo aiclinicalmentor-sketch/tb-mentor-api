@@ -253,6 +253,52 @@ async function getReasoningSummary(client, assistantContent) {
   }
 }
 
+async function buildCaseSnapshot(client, caseMessages) {
+  try {
+    const completion = await client.chat.completions.create({
+      model: "gpt-5.1",
+      temperature: 0,
+      response_format: { type: "json_object" },
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are TB Mentor's case summarizer. Based ONLY on the conversation below between a clinician and TB Mentor, extract a brief snapshot of the CURRENT patient. " +
+            "Return a JSON object with exactly two top-level keys: 'caseSummary' (string) and 'snapshot' (object). " +
+            "The 'snapshot' object must contain the keys: ageSex, weight, hiv, pregnancy, tbProfile, comorbidities, regimen, danger. " +
+            "Use short, clinician-style phrases (e.g., '2 y boy', 'HIV-negative', 'no TB contacts reported'). " +
+            "If information is not provided, use an empty string ''. " +
+            "If danger signs or TB contacts are clearly absent, say so explicitly (e.g., 'no danger signs reported'). " +
+            "Do not include any additional keys or commentary."
+        },
+        ...caseMessages
+      ]
+    });
+
+    const content = completion.choices?.[0]?.message?.content || "{}";
+    const parsed = JSON.parse(content);
+
+    const snap = parsed.snapshot || {};
+
+    return {
+      caseSummary: typeof parsed.caseSummary === "string" ? parsed.caseSummary : "",
+      snapshot: {
+        ageSex: typeof snap.ageSex === "string" ? snap.ageSex : "",
+        weight: typeof snap.weight === "string" ? snap.weight : "",
+        hiv: typeof snap.hiv === "string" ? snap.hiv : "",
+        pregnancy: typeof snap.pregnancy === "string" ? snap.pregnancy : "",
+        tbProfile: typeof snap.tbProfile === "string" ? snap.tbProfile : "",
+        comorbidities: typeof snap.comorbidities === "string" ? snap.comorbidities : "",
+        regimen: typeof snap.regimen === "string" ? snap.regimen : "",
+        danger: typeof snap.danger === "string" ? snap.danger : ""
+      }
+    };
+  } catch (err) {
+    console.warn("Case snapshot error:", err?.message || err);
+    return { caseSummary: null, snapshot: null };
+  }
+}
+
 async function callRag(args) {
   const ragBase =
     process.env.TB_RAG_BASE_URL ||
@@ -337,6 +383,9 @@ export default async function handler(req, res) {
     .slice(-12) // cap history depth
     .map((h) => ({ role: h.role, content: h.content.trim() }));
 
+  // Messages used for case snapshot building (only user/assistant turns, no tools)
+  const caseMessages = [...sanitizedHistory, { role: "user", content: message.trim() }];
+
   try {
     const messages = [
       { role: "system", content: SYSTEM_PROMPT },
@@ -401,12 +450,17 @@ export default async function handler(req, res) {
       messages.push(msg);
 
       const toolsUsed = extractToolsUsed(messages);
-      const reasoning = await getReasoningSummary(client, msg.content);
+      const [snapshotResult, reasoning] = await Promise.all([
+        buildCaseSnapshot(client, caseMessages),
+        getReasoningSummary(client, msg.content)
+      ]);
 
       return res.status(200).json({
         output: msg.content,
         toolsUsed,
-        reasoning
+        reasoning,
+        caseSummary: snapshotResult.caseSummary,
+        snapshot: snapshotResult.snapshot
       });
     }
   } catch (err) {
