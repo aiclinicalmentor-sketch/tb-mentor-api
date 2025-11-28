@@ -370,7 +370,18 @@ export default async function handler(req, res) {
 
             result = await callRag(args);
           } else if (name === "computePediatricTbTdaScore") {
-            result = await callTda(args);
+            const usedTools = extractToolsUsed(messages);
+            if (!usedTools.includes("fetchRelevantTbGuidance")) {
+              result = {
+                error: "TDA_PRECONDITION_FAILED",
+                detail:
+                  "You attempted to call computePediatricTbTdaScore before using fetchRelevantTbGuidance. " +
+                  "For real pediatric cases, you must first perform intake, construct CASE SUMMARY / TASK / RAG FOCUS, " +
+                  "and call fetchRelevantTbGuidance at least once to retrieve WHO guidance."
+              };
+            } else {
+              result = await callTda(args);
+            }
           } else {
             result = { error: `Unknown tool: ${name}` };
           }
