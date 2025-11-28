@@ -276,6 +276,16 @@
       flex-direction: column;
       gap: 12px;
     }
+
+    /* Keep the right-hand panel (case summary, mentor status, tone)
+       floating in view on larger screens so it stays near where the user is looking */
+    @media (min-width: 960px) {
+      .side-panel {
+        position: sticky;
+        bottom: 8px;
+        align-self: flex-start;
+      }
+    }
     .section-title {
       margin: 0;
       font-size: 12px;
