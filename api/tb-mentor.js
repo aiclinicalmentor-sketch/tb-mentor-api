@@ -210,9 +210,19 @@ const tools = [
 ];
 
 async function callRag(args) {
-  const res = await fetch(`${process.env.TB_MENTOR_BASE_URL || ""}/api/tb-rag-query`, {
+  const ragBase =
+    process.env.TB_RAG_BASE_URL ||
+    process.env.TB_MENTOR_BASE_URL ||
+    "";
+  const ragKey =
+    process.env.TB_RAG_API_KEY || process.env.TB_RAG_AUTH || null;
+
+  const headers = { "Content-Type": "application/json" };
+  if (ragKey) headers.Authorization = `Bearer ${ragKey}`;
+
+  const res = await fetch(`${ragBase}/api/tb-rag-query`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers,
     body: JSON.stringify(args)
   });
 
@@ -229,9 +239,21 @@ async function callRag(args) {
 }
 
 async function callTda(args) {
-  const res = await fetch(`${process.env.TB_MENTOR_BASE_URL || ""}/api/tb_peds_tda`, {
+  const tdaBase =
+    process.env.TB_TDA_BASE_URL ||
+    process.env.TB_MENTOR_BASE_URL ||
+    "";
+  const tdaKey =
+    process.env.TB_TDA_API_KEY ||
+    process.env.TB_PEDS_TDA_API_KEY ||
+    null;
+
+  const headers = { "Content-Type": "application/json" };
+  if (tdaKey) headers.Authorization = `Bearer ${tdaKey}`;
+
+  const res = await fetch(`${tdaBase}/api/tb_peds_tda`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers,
     body: JSON.stringify(args)
   });
 
