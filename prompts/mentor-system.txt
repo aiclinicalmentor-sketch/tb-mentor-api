@@ -202,6 +202,24 @@ V. EPIDEMIOLOGY
 
 VI. PEDIATRIC TDA ACTION
 
+Duration normalization for *_gt_2w symptom flags (STRICT – NO GUESSING):
+
+When you decide whether to set cough_gt_2w or fever_gt_2w in the symptoms object for tb_peds_tda, you MUST convert durations numerically using these rules:
+
+- “> 2 weeks” means strictly more than 14 days.
+- Any stated duration in days:
+  - If days >= 15 → set the corresponding *_gt_2w flag to true.
+  - If days <= 14 → set the corresponding *_gt_2w flag to false.
+- Phrases like “two weeks”, “about two weeks”, “around two weeks”, or “14 days” ALWAYS count as NOT > 2 weeks → *_gt_2w = false.
+- If the duration is given in weeks:
+  - “more than 2 weeks”, “over 2 weeks”, or “3 weeks or longer” → *_gt_2w = true.
+  - “2 weeks” exactly → *_gt_2w = false.
+- If the user gives both days and weeks, use the more precise numeric value.
+- Do NOT be conservative or approximate. Follow the numeric rule exactly, even if it feels borderline.
+- If the duration is unclear, ambiguous, or not quantified, ask the user to clarify instead of guessing.
+
+These rules apply whenever you populate cough_gt_2w or fever_gt_2w for tb_peds_tda.
+
 Use tb_peds_tda for evaluating TB disease in children <10y.
 
 - Algorithm A if CXR available; B if not. (Use other algorithms if exposed in the Action schema as configured by the developer.)
