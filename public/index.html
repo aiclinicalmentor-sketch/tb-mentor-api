@@ -53,17 +53,6 @@
       margin-bottom: 10px;
     }
     h1 { margin: 0; font-size: 30px; letter-spacing: -0.03em; }
-    .badge {
-      background: rgba(76, 201, 240, 0.18);
-      color: var(--accent);
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      border: 1px solid rgba(76, 201, 240, 0.75);
-      text-transform: uppercase;
-    }
     .lead {
       color: var(--muted);
       margin: 6px 0 0;
@@ -76,18 +65,11 @@
       font-weight: 500;
     }
 
-    .mode-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: 12px 0 18px;
-      align-items: center;
-      justify-content: space-between;
-    }
     .mode-pills {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
+      margin-top: 8px;
     }
     .mode-pill {
       display: inline-flex;
@@ -106,12 +88,6 @@
     }
     .mode-pill-value {
       font-size: 13px;
-    }
-    .mode-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
     }
     .toggle-wrap {
       display: inline-flex;
@@ -391,9 +367,6 @@
       .chat-window {
         height: 420px;
       }
-      .mode-bar {
-        align-items: flex-start;
-      }
     }
   </style>
 </head>
@@ -402,7 +375,6 @@
     <header>
       <div>
         <div class="row" style="margin-top:0">
-
           <h1>TB Mentor</h1>
         </div>
         <p class="lead">
@@ -412,33 +384,6 @@
       </div>
       <button id="resetBtn">New conversation</button>
     </header>
-
-    <div class="mode-bar">
-      <div class="mode-pills">
-        <div class="mode-pill">
-          <span class="mode-pill-label">Mode</span>
-          <span class="mode-pill-value" id="modeLabel">Ask / Clarify</span>
-        </div>
-        <div class="mode-pill">
-          <span class="mode-pill-label">Site setting</span>
-          <span class="mode-pill-value" id="siteLabel">MDR-TB referral hospital</span>
-        </div>
-        <div class="mode-pill">
-          <span class="mode-pill-label">Risk posture</span>
-          <span class="mode-pill-value" id="riskLabel">Standard</span>
-        </div>
-        <div class="mode-pill">
-          <span class="mode-pill-label">Learner level</span>
-          <span class="mode-pill-value" id="learnerLabel">Medical officer</span>
-        </div>
-      </div>
-      <div class="mode-right">
-        <label class="toggle-wrap">
-          <input type="checkbox" id="reasoningToggle">
-          <span>Show reasoning summary (when available)</span>
-        </label>
-      </div>
-    </div>
 
     <div class="grid">
       <div class="card chat">
@@ -498,6 +443,49 @@
             As you describe the case, the mentor will try to pre-fill age/HIV/pregnancy fields from your text.
           </p>
         </div>
+
+        <div style="margin-top: 18px;">
+          <div class="row" style="justify-content: space-between; margin-top: 0;">
+            <p class="section-title">Mentor status</p>
+            <label class="toggle-wrap">
+              <input type="checkbox" id="reasoningToggle">
+              <span>Show reasoning summary</span>
+            </label>
+          </div>
+          <p class="snapshot-help">
+            These indicators summarize how the mentor is reasoning in this conversation.
+          </p>
+          <div class="mode-pills">
+            <div class="mode-pill">
+              <span class="mode-pill-label">Mode</span>
+              <span class="mode-pill-value" id="modeLabel">Ask / Clarify</span>
+            </div>
+            <div class="mode-pill">
+              <span class="mode-pill-label">Phase</span>
+              <span class="mode-pill-value" id="phaseLabel">Intake / Clarify</span>
+            </div>
+            <div class="mode-pill">
+              <span class="mode-pill-label">Confidence</span>
+              <span class="mode-pill-value" id="confidenceLabel">—</span>
+            </div>
+            <div class="mode-pill">
+              <span class="mode-pill-label">Epi context</span>
+              <span class="mode-pill-value" id="epiLabel">High TB / RR-TB burden</span>
+            </div>
+            <div class="mode-pill">
+              <span class="mode-pill-label">Site profile</span>
+              <span class="mode-pill-value" id="siteProfileLabel">MDR-TB referral hospital</span>
+            </div>
+            <div class="mode-pill">
+              <span class="mode-pill-label">Resource setting</span>
+              <span class="mode-pill-value" id="resourceLabel">Limited diagnostics</span>
+            </div>
+            <div class="mode-pill">
+              <span class="mode-pill-label">Risk posture</span>
+              <span class="mode-pill-value" id="riskLabel">Standard</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -520,6 +508,14 @@
     const snapDanger = document.getElementById("snapDanger");
     const caseSummaryText = document.getElementById("caseSummaryText");
 
+    const modeLabel = document.getElementById("modeLabel");
+    const phaseLabel = document.getElementById("phaseLabel");
+    const confidenceLabel = document.getElementById("confidenceLabel");
+    const epiLabel = document.getElementById("epiLabel");
+    const siteProfileLabel = document.getElementById("siteProfileLabel");
+    const resourceLabel = document.getElementById("resourceLabel");
+    const riskLabel = document.getElementById("riskLabel");
+
     let history = [];
     let sending = false;
     let showReasoning = false;
@@ -527,6 +523,23 @@
 
     function scrollToBottom() {
       chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    function renderMarkdown(text) {
+      if (!text) return "";
+      let s = text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+
+      // bold **text**
+      s = s.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+      // italic *text*
+      s = s.replace(/\*(.+?)\*/g, "<em>$1</em>");
+
+      // line breaks
+      s = s.replace(/\n/g, "<br>");
+      return s;
     }
 
     function createMessageBlock(msg, index) {
@@ -539,7 +552,13 @@
         baseClass += " thinking";
       }
       bubble.className = baseClass;
-      bubble.textContent = msg.content;
+
+      if (msg.role === "assistant" || msg.role === "system") {
+        bubble.innerHTML = renderMarkdown(msg.content);
+      } else {
+        bubble.textContent = msg.content;
+      }
+
       block.appendChild(bubble);
 
       if (msg.role === "assistant" && !msg.thinking) {
@@ -563,7 +582,7 @@
         if (showReasoning && msg.reasoning) {
           const reasoningDiv = document.createElement("div");
           reasoningDiv.className = "reasoning-block";
-          reasoningDiv.textContent = msg.reasoning;
+          reasoningDiv.innerHTML = renderMarkdown(msg.reasoning);
           block.appendChild(reasoningDiv);
         }
 
@@ -753,7 +772,8 @@
         });
         removeThinkingBubble();
         renderMessages();
-        setStatus("Answer ready.", "success");
+        // keep status bar free unless there's an error
+        setStatus("", "");
       } catch (err) {
         removeThinkingBubble();
         setStatus("Network or server error. Try again.", "error");
