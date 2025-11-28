@@ -41,6 +41,9 @@
       border-radius: 18px;
       box-shadow: var(--shadow);
       padding: 10px;
+      min-height: calc(100vh - 16px);
+      display: flex;
+      flex-direction: column;
     }
     header {
       display: flex;
@@ -67,6 +70,8 @@
       grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.3fr);
       gap: 16px;
       margin-top: 4px;
+      flex: 1;
+      align-content: stretch;
     }
     .card {
       background: var(--panel);
@@ -85,9 +90,10 @@
       border: 1px solid var(--border-subtle);
       border-radius: 10px;
       padding: 12px 12px 8px;
-      height: 440px;
       overflow-y: auto;
       scroll-behavior: smooth;
+      flex: 1;
+      min-height: 260px;
     }
     .msg-block { margin-bottom: 2px; }
     .msg {
@@ -315,10 +321,48 @@
       .grid {
         grid-template-columns: 1fr;
       }
-      .chat-window {
-        height: 400px;
+
+    }
+  
+    @media (max-width: 640px) {
+      body {
+        padding: 0;
+      }
+      .shell {
+        max-width: none;
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+        min-height: 100vh;
+      }
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: var(--shell);
+        padding-bottom: 6px;
+      }
+      .grid {
+        gap: 10px;
+        padding: 0 8px 8px;
+      }
+      h1 {
+        font-size: 22px;
+      }
+      .lead {
+        font-size: 13px;
+      }
+      .card {
+        border-radius: 0.75rem;
+      }
+      .input-area {
+        gap: 6px;
+      }
+      button {
+        padding-inline: 10px;
       }
     }
+
   </style>
 </head>
 <body>
