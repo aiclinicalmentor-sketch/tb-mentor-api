@@ -277,13 +277,19 @@
       gap: 12px;
     }
 
-    /* Keep the right-hand panel (case summary, mentor status, tone)
-       floating in view on larger screens so it stays near where the user is looking */
+    /* On larger screens, float the right-hand panel near the bottom-right of the shell */
     @media (min-width: 960px) {
       .side-panel {
-        position: sticky;
-        bottom: 8px;
-        align-self: flex-start;
+        position: fixed;
+        bottom: 12px;
+        right: max(8px, calc((100vw - 1200px) / 2 + 8px));
+        width: 320px;
+        max-height: calc(100vh - 120px);
+        overflow-y: auto;
+        z-index: 40;
+      }
+      .grid {
+        grid-template-columns: minmax(0, 1fr);
       }
     }
     .section-title {
