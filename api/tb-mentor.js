@@ -28,8 +28,15 @@ const tools = [
     type: "function",
     function: {
       name: "fetchRelevantTbGuidance",
-      description:
-        "Embed a clinician TB question and return the top-matching WHO TB guideline passages from the TB RAG store. " +
+      description: `
+Embed a clinician TB question and return the top-matching WHO TB guideline passages from the TB RAG store.
+
+You MUST use this tool before giving any case-specific TB explanation, reasoning, or regimen/treatment recommendation,
+unless the user is explicitly asking a purely factual/non-clinical question about TB (e.g., epidemiology, biology).
+
+For real patients, always construct a CASE SUMMARY, TASK, and RAG FOCUS in your message,
+then call this tool with a compact, embedding-friendly question string that encodes patient, problem, task, and context.
+`, +
         "Use this before giving any case-specific TB explanation or reasoning.",
       parameters: {
         type: "object",
