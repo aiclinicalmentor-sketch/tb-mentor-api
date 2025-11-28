@@ -233,6 +233,7 @@ function extractToolsUsed(messages) {
 }
 
 async function getReasoningSummary(client, assistantContent) {
+
   try {
     const completion = await client.chat.completions.create({
       model: "gpt-5.1",
@@ -277,7 +278,6 @@ async function buildCaseSnapshot(client, caseMessages) {
 
     const content = completion.choices?.[0]?.message?.content || "{}";
     const parsed = JSON.parse(content);
-
     const snap = parsed.snapshot || {};
 
     return {
@@ -296,6 +296,43 @@ async function buildCaseSnapshot(client, caseMessages) {
   } catch (err) {
     console.warn("Case snapshot error:", err?.message || err);
     return { caseSummary: null, snapshot: null };
+  }
+}
+
+async function buildMentorStatus(client, convoMessages) {
+  try {
+    const completion = await client.chat.completions.create({
+      model: "gpt-5.1",
+      temperature: 0,
+      response_format: { type: "json_object" },
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are TB Mentor's status summarizer. Based on the conversation so far between a clinician and TB Mentor, infer the mentor's current status. " +
+            "Return a JSON object with exactly these keys: mode, phase, confidence, epiContext, siteProfile, resourceSetting, riskPosture. " +
+            "Use concise labels that are comfortable for clinicians to scan quickly (e.g., 'Ask / Clarify', 'Synthesize / Explain', 'High', 'Moderate', 'Low'). " +
+            "If you are uncertain, choose the best-fitting label rather than leaving it blank."
+        },
+        ...convoMessages.filter((m) => m.role === "user" || m.role === "assistant" || m.role === "tool")
+      ]
+    });
+
+    const content = completion.choices?.[0]?.message?.content || "{}";
+    const parsed = JSON.parse(content);
+
+    return {
+      mode: typeof parsed.mode === "string" ? parsed.mode : "",
+      phase: typeof parsed.phase === "string" ? parsed.phase : "",
+      confidence: typeof parsed.confidence === "string" ? parsed.confidence : "",
+      epiContext: typeof parsed.epiContext === "string" ? parsed.epiContext : "",
+      siteProfile: typeof parsed.siteProfile === "string" ? parsed.siteProfile : "",
+      resourceSetting: typeof parsed.resourceSetting === "string" ? parsed.resourceSetting : "",
+      riskPosture: typeof parsed.riskPosture === "string" ? parsed.riskPosture : ""
+    };
+  } catch (err) {
+    console.warn("Mentor status error:", err?.message || err);
+    return null;
   }
 }
 
@@ -383,9 +420,6 @@ export default async function handler(req, res) {
     .slice(-12) // cap history depth
     .map((h) => ({ role: h.role, content: h.content.trim() }));
 
-  // Messages used for case snapshot building (only user/assistant turns, no tools)
-  const caseMessages = [...sanitizedHistory, { role: "user", content: message.trim() }];
-
   try {
     const messages = [
       { role: "system", content: SYSTEM_PROMPT },
@@ -450,9 +484,12 @@ export default async function handler(req, res) {
       messages.push(msg);
 
       const toolsUsed = extractToolsUsed(messages);
-      const [snapshotResult, reasoning] = await Promise.all([
+      const caseMessages = sanitizedHistory.concat({ role: "user", content: message.trim() });
+
+      const [reasoning, snapshotResult, mentorStatus] = await Promise.all([
+        getReasoningSummary(client, msg.content),
         buildCaseSnapshot(client, caseMessages),
-        getReasoningSummary(client, msg.content)
+        buildMentorStatus(client, messages)
       ]);
 
       return res.status(200).json({
@@ -460,7 +497,8 @@ export default async function handler(req, res) {
         toolsUsed,
         reasoning,
         caseSummary: snapshotResult.caseSummary,
-        snapshot: snapshotResult.snapshot
+        snapshot: snapshotResult.snapshot,
+        mentorStatus
       });
     }
   } catch (err) {
