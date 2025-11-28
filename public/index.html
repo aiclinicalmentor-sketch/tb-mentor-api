@@ -275,45 +275,6 @@
       font-size: 12px;
       color: var(--muted);
     }
-    .snapshot-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px 10px;
-      margin-bottom: 6px;
-    }
-    .snapshot-grid label {
-      font-size: 11px;
-      color: var(--muted);
-      display: block;
-      margin-bottom: 2px;
-    }
-    .snapshot-grid input,
-    .snapshot-grid textarea {
-      width: 100%;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: #ffffff;
-      color: var(--text);
-      padding: 6px 8px;
-      font-size: 13px;
-      resize: vertical;
-      min-height: 26px;
-    }
-    .snapshot-grid textarea {
-      grid-column: 1 / -1;
-      min-height: 40px;
-    }
-    .snapshot-grid input:focus,
-    .snapshot-grid textarea:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 2px var(--accent-soft);
-    }
-    .snapshot-footer {
-      margin-top: 3px;
-      font-size: 11px;
-      color: var(--muted);
-    }
     .toggle-wrap {
       display: inline-flex;
       align-items: center;
@@ -387,47 +348,9 @@
 
       <div class="card side-panel">
         <div>
-          <p class="section-title">Case snapshot</p>
-          <p class="snapshot-help" id="caseSummaryText"></p>
-          <p class="snapshot-help">
-            Key facts stay pinned here. You can edit at any time; this does not change previous messages.
-          </p>
-          <div class="snapshot-grid">
-            <div>
-              <label for="snapAge">Age / sex</label>
-              <input id="snapAge" type="text" placeholder="e.g., 30 y M">
-            </div>
-            <div>
-              <label for="snapWeight">Weight</label>
-              <input id="snapWeight" type="text" placeholder="e.g., 54 kg">
-            </div>
-            <div>
-              <label for="snapHiv">HIV status</label>
-              <input id="snapHiv" type="text" placeholder="e.g., HIV+, CD4 220">
-            </div>
-            <div>
-              <label for="snapPreg">Pregnancy</label>
-              <input id="snapPreg" type="text" placeholder="e.g., 1st trimester">
-            </div>
-            <div>
-              <label for="snapTb">TB profile</label>
-              <input id="snapTb" type="text" placeholder="e.g., new RR-TB, no SL exposure">
-            </div>
-            <div>
-              <label for="snapComorbid">Comorbidities</label>
-              <input id="snapComorbid" type="text" placeholder="e.g., diabetes, CKD">
-            </div>
-            <div>
-              <label for="snapRegimen">Current regimen</label>
-              <textarea id="snapRegimen" placeholder="e.g., BDQ LFX LZD Cfz, start date, planned duration"></textarea>
-            </div>
-            <div>
-              <label for="snapDanger">Danger signs / labs</label>
-              <textarea id="snapDanger" placeholder="e.g., RR 36, SpO2 90%, Cr 1.8, QTc 470 ms"></textarea>
-            </div>
-          </div>
-          <p class="snapshot-footer">
-            As you describe the case, the mentor will auto-summarize and pre-fill key details from the conversation.
+          <p class="section-title">Case summary</p>
+          <p class="snapshot-help" id="caseSummaryText">
+            The mentor will keep a one-line snapshot of the current patient here as the conversation evolves.
           </p>
         </div>
 
@@ -485,14 +408,6 @@
     const statusEl = document.getElementById("status");
     const reasoningToggle = document.getElementById("reasoningToggle");
 
-    const snapAge = document.getElementById("snapAge");
-    const snapWeight = document.getElementById("snapWeight");
-    const snapHiv = document.getElementById("snapHiv");
-    const snapPreg = document.getElementById("snapPreg");
-    const snapTb = document.getElementById("snapTb");
-    const snapComorbid = document.getElementById("snapComorbid");
-    const snapRegimen = document.getElementById("snapRegimen");
-    const snapDanger = document.getElementById("snapDanger");
     const caseSummaryText = document.getElementById("caseSummaryText");
 
     const modeLabel = document.getElementById("modeLabel");
@@ -701,22 +616,10 @@
           data.reasoningSummary || data.reasoning_summary || data.reasoning || null;
 
         const caseSummary = data.caseSummary || null;
-        const snapshot = data.snapshot || null;
         const mentorStatus = data.mentorStatus || null;
 
         if (caseSummaryText) {
           caseSummaryText.textContent = caseSummary || "";
-        }
-
-        if (snapshot) {
-          if (!snapAge.value && snapshot.ageSex) snapAge.value = snapshot.ageSex;
-          if (!snapWeight.value && snapshot.weight) snapWeight.value = snapshot.weight;
-          if (!snapHiv.value && snapshot.hiv) snapHiv.value = snapshot.hiv;
-          if (!snapPreg.value && snapshot.pregnancy) snapPreg.value = snapshot.pregnancy;
-          if (!snapTb.value && snapshot.tbProfile) snapTb.value = snapshot.tbProfile;
-          if (!snapComorbid.value && snapshot.comorbidities) snapComorbid.value = snapshot.comorbidities;
-          if (!snapRegimen.value && snapshot.regimen) snapRegimen.value = snapshot.regimen;
-          if (!snapDanger.value && snapshot.danger) snapDanger.value = snapshot.danger;
         }
 
         if (mentorStatus) {
@@ -785,15 +688,9 @@
       setStatus("", "");
       promptEl.value = "";
       promptEl.focus();
-      snapAge.value = "";
-      snapWeight.value = "";
-      snapHiv.value = "";
-      snapPreg.value = "";
-      snapTb.value = "";
-      snapComorbid.value = "";
-      snapRegimen.value = "";
-      snapDanger.value = "";
-      if (caseSummaryText) caseSummaryText.textContent = "";
+      if (caseSummaryText) {
+        caseSummaryText.textContent = "The mentor will keep a one-line snapshot of the current patient here as the conversation evolves.";
+      }
       // leave Mentor Status as last-known or defaults
     });
 
