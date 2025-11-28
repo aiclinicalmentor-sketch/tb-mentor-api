@@ -9,24 +9,26 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0f1724;
-      --panel: #111a2a;
-      --surface: #0c1624;
-      --text: #eaf1fb;
-      --muted: #94a5bc;
+      --bg: #020617;
+      --panel: #020617;
+      --surface: #020617;
+      --text: #f9fbff;
+      --muted: #9ca3c7;
       --accent: #4cc9f0;
       --accent-strong: #7c3aed;
-      --border: rgba(255, 255, 255, 0.08);
-      --shadow: 0 20px 60px rgba(6, 12, 24, 0.6);
+      --border: rgba(148, 163, 184, 0.6);
+      --border-subtle: rgba(148, 163, 184, 0.35);
+      --shadow: 0 20px 60px rgba(15, 23, 42, 0.8);
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
       min-height: 100vh;
       font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
-      background: radial-gradient(circle at 18% 18%, rgba(124, 58, 237, 0.18), transparent 40%),
-                  radial-gradient(circle at 78% 0%, rgba(76, 201, 240, 0.18), transparent 35%),
-                  var(--bg);
+      background:
+        radial-gradient(circle at 18% 18%, rgba(124, 58, 237, 0.2), transparent 45%),
+        radial-gradient(circle at 82% 6%, rgba(76, 201, 240, 0.2), transparent 40%),
+        var(--bg);
       color: var(--text);
       padding: 32px 16px 48px;
       display: flex;
@@ -35,12 +37,12 @@
     .shell {
       width: 100%;
       max-width: 1200px;
-      background: rgba(10, 15, 26, 0.8);
-      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid var(--border-subtle);
       border-radius: 18px;
       box-shadow: var(--shadow);
-      padding: 26px;
-      backdrop-filter: blur(6px);
+      padding: 24px;
+      backdrop-filter: blur(10px);
     }
     header {
       display: flex;
@@ -48,37 +50,37 @@
       gap: 12px;
       flex-wrap: wrap;
       align-items: flex-start;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
-    h1 { margin: 0; font-size: 28px; letter-spacing: -0.02em; }
+    h1 { margin: 0; font-size: 30px; letter-spacing: -0.03em; }
     .badge {
-      background: rgba(76, 201, 240, 0.16);
+      background: rgba(76, 201, 240, 0.18);
       color: var(--accent);
       padding: 6px 10px;
       border-radius: 999px;
       font-size: 12px;
       font-weight: 700;
-      letter-spacing: 0.02em;
-      border: 1px solid rgba(76, 201, 240, 0.4);
+      letter-spacing: 0.08em;
+      border: 1px solid rgba(76, 201, 240, 0.75);
+      text-transform: uppercase;
     }
     .lead {
       color: var(--muted);
       margin: 6px 0 0;
-      line-height: 1.55;
+      line-height: 1.6;
       max-width: 780px;
-      font-size: 14px;
+      font-size: 15px;
     }
     .lead strong {
       color: var(--text);
       font-weight: 500;
     }
 
-    /* Reasoning mode bar (1) */
     .mode-bar {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin: 10px 0 18px;
+      margin: 12px 0 18px;
       align-items: center;
       justify-content: space-between;
     }
@@ -92,14 +94,14 @@
       flex-direction: column;
       padding: 6px 10px;
       border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--border-subtle);
+      background: rgba(15, 23, 42, 0.9);
       min-width: 130px;
     }
     .mode-pill-label {
       font-size: 11px;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.12em;
       color: var(--muted);
     }
     .mode-pill-value {
@@ -126,8 +128,9 @@
 
     .grid {
       display: grid;
-      grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.3fr);
-      gap: 16px;
+      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.3fr);
+      gap: 18px;
+      margin-top: 4px;
     }
     .card {
       background: var(--panel);
@@ -138,14 +141,14 @@
     .chat {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
       height: 100%;
     }
     .chat-window {
       background: var(--surface);
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-subtle);
       border-radius: 12px;
-      padding: 14px;
+      padding: 14px 14px 10px;
       height: 460px;
       overflow-y: auto;
       scroll-behavior: smooth;
@@ -155,26 +158,35 @@
     }
     .msg {
       max-width: 86%;
-      padding: 12px 14px;
+      padding: 10px 13px;
       border-radius: 12px;
       line-height: 1.5;
       font-size: 15px;
       white-space: pre-wrap;
       word-break: break-word;
+      border: 1px solid transparent;
     }
     .msg.user {
       margin-left: auto;
       background: linear-gradient(135deg, #4cc9f0, #7c3aed);
-      color: #0b1220;
+      color: #020617;
+      border-color: rgba(15, 23, 42, 0.8);
     }
     .msg.assistant {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.95);
+      border-color: var(--border-subtle);
     }
     .msg.system {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px dashed var(--border);
+      background: rgba(15, 23, 42, 0.8);
+      border-style: dashed;
+      border-color: var(--border-subtle);
       color: var(--muted);
+    }
+    .msg.thinking {
+      font-style: italic;
+      color: var(--muted);
+      border-style: dashed;
+      border-color: rgba(148, 163, 184, 0.5);
     }
     .assistant-meta {
       margin-top: 4px;
@@ -188,18 +200,45 @@
     .tool-pill {
       padding: 2px 8px;
       border-radius: 999px;
-      border: 1px solid rgba(148,165,184,0.5);
-      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.98);
       font-size: 11px;
       white-space: nowrap;
+    }
+    .assistant-actions {
+      margin-top: 6px;
+      margin-left: 4px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 12px;
+    }
+    .qa-btn {
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+      background: rgba(15, 23, 42, 0.9);
+      padding: 4px 10px;
+      font-size: 12px;
+      color: var(--muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+    }
+    .qa-btn:hover {
+      background: rgba(15, 23, 42, 1);
+      border-color: rgba(76, 201, 240, 0.8);
+      color: var(--text);
+      transform: translateY(-0.5px);
     }
     .reasoning-block {
       margin-top: 6px;
       margin-left: 4px;
       padding: 8px 10px;
       border-radius: 8px;
-      border: 1px dashed rgba(148, 163, 184, 0.6);
-      background: rgba(15, 23, 42, 0.85);
+      border: 1px dashed rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.96);
       font-size: 13px;
       color: var(--muted);
     }
@@ -208,6 +247,7 @@
       display: flex;
       gap: 10px;
       align-items: flex-start;
+      margin-top: 2px;
     }
     textarea {
       flex: 1;
@@ -215,7 +255,7 @@
       max-height: 140px;
       border-radius: 12px;
       border: 1px solid var(--border);
-      background: rgba(255, 255, 255, 0.02);
+      background: rgba(15, 23, 42, 0.95);
       color: var(--text);
       padding: 12px;
       font-size: 15px;
@@ -223,14 +263,17 @@
       resize: vertical;
       transition: border 0.2s, box-shadow 0.2s;
     }
+    textarea::placeholder {
+      color: rgba(148, 163, 184, 0.9);
+    }
     textarea:focus {
       outline: none;
-      border-color: rgba(76, 201, 240, 0.7);
-      box-shadow: 0 0 0 3px rgba(76, 201, 240, 0.14);
+      border-color: rgba(76, 201, 240, 0.9);
+      box-shadow: 0 0 0 2px rgba(76, 201, 240, 0.25);
     }
     button {
       background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-      color: #0b1220;
+      color: #020617;
       border: none;
       border-radius: 12px;
       padding: 12px 16px;
@@ -240,13 +283,13 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      box-shadow: 0 12px 28px rgba(124, 58, 237, 0.26);
+      box-shadow: 0 12px 28px rgba(124, 58, 237, 0.4);
       transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
       white-space: nowrap;
     }
     button:hover {
       transform: translateY(-1px);
-      box-shadow: 0 16px 34px rgba(124, 58, 237, 0.28);
+      box-shadow: 0 16px 34px rgba(124, 58, 237, 0.5);
     }
     button:disabled {
       opacity: 0.6;
@@ -257,28 +300,34 @@
     #resetBtn {
       background: transparent;
       color: var(--muted);
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-subtle);
       box-shadow: none;
       padding-inline: 12px;
+      font-weight: 500;
     }
+    #resetBtn:hover {
+      color: var(--text);
+      border-color: rgba(148, 163, 184, 0.9);
+      background: rgba(15, 23, 42, 0.8);
+    }
+
     .status {
       font-size: 13px;
       color: var(--muted);
-      margin-top: 8px;
+      margin-top: 4px;
       min-height: 18px;
     }
-    .error { color: #ff8a8a; }
-    .success { color: #7ef7c6; }
+    .error { color: #fecaca; }
+    .success { color: #bbf7d0; }
     .row {
       display: flex;
       align-items: center;
       gap: 10px;
       flex-wrap: wrap;
-      margin-top: 8px;
+      margin-top: 6px;
     }
 
-    /* Right column: case snapshot + quick starters (2 & 5) */
-    .quickstarters {
+    .side-panel {
       display: flex;
       flex-direction: column;
       gap: 14px;
@@ -287,7 +336,7 @@
       margin: 0;
       font-size: 13px;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
       color: var(--muted);
     }
     .snapshot-help {
@@ -311,8 +360,8 @@
     .snapshot-grid textarea {
       width: 100%;
       border-radius: 8px;
-      border: 1px solid var(--border);
-      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border-subtle);
+      background: rgba(15, 23, 42, 0.95);
       color: var(--text);
       padding: 6px 8px;
       font-size: 13px;
@@ -326,38 +375,13 @@
     .snapshot-grid input:focus,
     .snapshot-grid textarea:focus {
       outline: none;
-      border-color: rgba(76, 201, 240, 0.7);
-      box-shadow: 0 0 0 2px rgba(76, 201, 240, 0.12);
+      border-color: rgba(76, 201, 240, 0.9);
+      box-shadow: 0 0 0 2px rgba(76, 201, 240, 0.25);
     }
     .snapshot-footer {
       margin-top: 4px;
       font-size: 11px;
       color: var(--muted);
-    }
-    .samples-title {
-      margin: 10px 0 6px;
-      font-size: 13px;
-      color: var(--muted);
-    }
-    .samples {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .pill {
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(15, 23, 42, 0.9);
-      font-size: 12px;
-      color: var(--muted);
-      cursor: pointer;
-      transition: border 0.15s ease, background 0.15s ease, transform 0.1s ease;
-    }
-    .pill:hover {
-      border-color: rgba(76, 201, 240, 0.7);
-      background: rgba(15, 23, 42, 1);
-      transform: translateY(-0.5px);
     }
 
     @media (max-width: 960px) {
@@ -382,14 +406,13 @@
           <h1>TB Mentor</h1>
         </div>
         <p class="lead">
-          Hold a conversation about a patient. <strong>Include age, weight, HIV status, pregnancy, TB history, comorbidities, current regimen and labs.</strong>
+          Hold a conversation about a patient. <strong>Include age, weight, HIV status, pregnancy, TB history, comorbidities, current regimen and key labs.</strong>
           Ask specific questions (diagnosis, regimen choice, drug interactions, monitoring, or follow-up).
         </p>
       </div>
       <button id="resetBtn">New conversation</button>
     </header>
 
-    <!-- Reasoning mode bar (1 & 4) -->
     <div class="mode-bar">
       <div class="mode-pills">
         <div class="mode-pill">
@@ -418,7 +441,6 @@
     </div>
 
     <div class="grid">
-      <!-- Left: chat -->
       <div class="card chat">
         <div class="chat-window" id="chatWindow"></div>
         <div class="input-area">
@@ -428,11 +450,10 @@
           ></textarea>
           <button id="askBtn">Send</button>
         </div>
-        <div class="status" id="status">Ready.</div>
+        <div class="status" id="status"></div>
       </div>
 
-      <!-- Right: case snapshot + quick starters -->
-      <div class="card quickstarters">
+      <div class="card side-panel">
         <div>
           <p class="section-title">Case snapshot</p>
           <p class="snapshot-help">
@@ -476,33 +497,11 @@
             As you describe the case, the mentor will try to pre-fill age/HIV/pregnancy fields from your text.
           </p>
         </div>
-
-        <div>
-          <p class="samples-title">Quick starters</p>
-          <div class="samples" id="samples">
-            <div class="pill">
-              32-year-old with MDR-TB, HIV+, weight 54 kg, baseline creatinine elevated. How to adjust regimen and monitor renal function?
-            </div>
-            <div class="pill">
-              Pregnant patient (28 weeks) with TB/HIV coinfection and low CD4 — recommended regimen and fetal considerations?
-            </div>
-            <div class="pill">
-              Six-year-old exposed to MDR-TB, asymptomatic. Should I start preventive therapy and which regimen?
-            </div>
-            <div class="pill">
-              Adult with diabetes and smear-positive pulmonary TB starting rifampicin — drug interactions and monitoring plan?
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
 
   <script>
-    const SYSTEM_MESSAGE =
-      "This assistant reasons over TB guidelines and your configured tools. It cannot see PHI beyond what you share. " +
-      "Provide enough detail (age, HIV status, pregnancy, TB history, comorbidities, current regimen, key labs) for safe TB reasoning.";
-
     const promptEl = document.getElementById("prompt");
     const askBtn = document.getElementById("askBtn");
     const resetBtn = document.getElementById("resetBtn");
@@ -510,7 +509,6 @@
     const statusEl = document.getElementById("status");
     const reasoningToggle = document.getElementById("reasoningToggle");
 
-    // Snapshot fields (2)
     const snapAge = document.getElementById("snapAge");
     const snapWeight = document.getElementById("snapWeight");
     const snapHiv = document.getElementById("snapHiv");
@@ -519,22 +517,26 @@
     let history = [];
     let sending = false;
     let showReasoning = false;
+    let thinkingNode = null;
 
     function scrollToBottom() {
       chatWindow.scrollTop = chatWindow.scrollHeight;
     }
 
-    function createMessageBlock(msg) {
+    function createMessageBlock(msg, index) {
       const block = document.createElement("div");
       block.className = "msg-block";
 
       const bubble = document.createElement("div");
-      bubble.className = "msg " + (msg.role || "assistant");
+      let baseClass = "msg " + (msg.role || "assistant");
+      if (msg.thinking) {
+        baseClass += " thinking";
+      }
+      bubble.className = baseClass;
       bubble.textContent = msg.content;
       block.appendChild(bubble);
 
-      if (msg.role === "assistant") {
-        // Tool usage tags (3)
+      if (msg.role === "assistant" && !msg.thinking) {
         if (Array.isArray(msg.toolsUsed) && msg.toolsUsed.length > 0) {
           const meta = document.createElement("div");
           meta.className = "assistant-meta";
@@ -552,13 +554,40 @@
           block.appendChild(meta);
         }
 
-        // Reasoning trace (4)
         if (showReasoning && msg.reasoning) {
           const reasoningDiv = document.createElement("div");
           reasoningDiv.className = "reasoning-block";
           reasoningDiv.textContent = msg.reasoning;
           block.appendChild(reasoningDiv);
         }
+
+        const actions = document.createElement("div");
+        actions.className = "assistant-actions";
+        actions.dataset.index = index;
+
+        const followBtn = document.createElement("button");
+        followBtn.className = "qa-btn";
+        followBtn.type = "button";
+        followBtn.textContent = "Ask follow-up";
+        followBtn.addEventListener("click", () => handleQuickAction("followup", index));
+
+        const summaryBtn = document.createElement("button");
+        summaryBtn.className = "qa-btn";
+        summaryBtn.type = "button";
+        summaryBtn.textContent = "Summarize";
+        summaryBtn.addEventListener("click", () => handleQuickAction("summarize", index));
+
+        const planBtn = document.createElement("button");
+        planBtn.className = "qa-btn";
+        planBtn.type = "button";
+        planBtn.textContent = "Create plan";
+        planBtn.addEventListener("click", () => handleQuickAction("plan", index));
+
+        actions.appendChild(followBtn);
+        actions.appendChild(summaryBtn);
+        actions.appendChild(planBtn);
+
+        block.appendChild(actions);
       }
 
       return block;
@@ -566,10 +595,10 @@
 
     function renderMessages() {
       chatWindow.innerHTML = "";
-      for (const m of history) {
-        const block = createMessageBlock(m);
+      history.forEach((m, i) => {
+        const block = createMessageBlock(m, i);
         chatWindow.appendChild(block);
-      }
+      });
       scrollToBottom();
     }
 
@@ -578,7 +607,31 @@
       statusEl.className = "status" + (className ? " " + className : "");
     }
 
-    // very lightweight extraction for snapshot (2)
+    function addThinkingBubble() {
+      removeThinkingBubble();
+      const block = document.createElement("div");
+      block.className = "msg-block";
+      const bubble = document.createElement("div");
+      bubble.className = "msg assistant thinking";
+      bubble.textContent = "Thinking…";
+      block.appendChild(bubble);
+      chatWindow.appendChild(block);
+      thinkingNode = block;
+      scrollToBottom();
+    }
+
+    function removeThinkingBubble() {
+      if (thinkingNode && thinkingNode.parentNode) {
+        thinkingNode.parentNode.removeChild(thinkingNode);
+      }
+      thinkingNode = null;
+    }
+
+    function addErrorMessage(friendlyText) {
+      history.push({ role: "system", content: friendlyText });
+      renderMessages();
+    }
+
     function updateSnapshotFromMessage(text) {
       if (!text) return;
 
@@ -605,9 +658,10 @@
       }
     }
 
-    async function sendMessage() {
+    async function sendMessage(explicitMessage) {
       if (sending) return;
-      const message = promptEl.value.trim();
+      const raw = explicitMessage != null ? explicitMessage : promptEl.value;
+      const message = (raw || "").trim();
       if (!message) {
         setStatus("Please enter a case and question.", "error");
         return;
@@ -615,15 +669,18 @@
 
       sending = true;
       askBtn.disabled = true;
-      setStatus("Thinking...");
+      setStatus("", "");
+      addThinkingBubble();
 
-      // update snapshot heuristically (2)
-      updateSnapshotFromMessage(message);
+      if (explicitMessage == null) {
+        updateSnapshotFromMessage(message);
+      }
 
-      // Add user message
       history.push({ role: "user", content: message });
       renderMessages();
-      promptEl.value = "";
+      if (explicitMessage == null) {
+        promptEl.value = "";
+      }
 
       try {
         const convoForApi = history.filter(
@@ -638,7 +695,16 @@
 
         const data = await res.json().catch(() => ({}));
         if (!res.ok) {
-          setStatus(data?.error || "Request failed.", "error");
+          const errText = data?.error || "Request failed.";
+          let friendly = "Something went wrong. You can retry or rephrase the question.";
+          if (errText.includes("tb-rag-query")) {
+            friendly = "Guideline retrieval failed (tb-rag-query). You can retry, or continue with a more focused question.";
+          } else if (errText.includes("tb_peds_tda")) {
+            friendly = "The pediatric TB algorithm (TDA) service failed. You may need to retry or calculate the score manually.";
+          }
+          removeThinkingBubble();
+          setStatus(errText, "error");
+          addErrorMessage(friendly);
           return;
         }
 
@@ -647,7 +713,6 @@
             ? data.output
             : data.output?.text || "No content returned.";
 
-        // Optional fields from backend for (3) and (4)
         const toolsUsed = data.toolsUsed || data.tools || [];
         const reasoning =
           data.reasoningSummary || data.reasoning_summary || data.reasoning || null;
@@ -658,10 +723,13 @@
           toolsUsed,
           reasoning
         });
+        removeThinkingBubble();
         renderMessages();
         setStatus("Answer ready.", "success");
       } catch (err) {
+        removeThinkingBubble();
         setStatus("Network or server error. Try again.", "error");
+        addErrorMessage("Network or server error. If this keeps happening, check connectivity or try again later.");
       } finally {
         sending = false;
         askBtn.disabled = false;
@@ -669,7 +737,29 @@
       }
     }
 
-    askBtn.addEventListener("click", sendMessage);
+    function handleQuickAction(type, index) {
+      if (sending) return;
+      const msg = history[index];
+      if (!msg || msg.role !== "assistant") return;
+
+      let text;
+      if (type === "summarize") {
+        text =
+          "Please summarize your last answer in 3–5 bullet points for a busy clinician who is about to see this patient.";
+      } else if (type === "plan") {
+        text =
+          "Convert your last answer into a concrete 1–3–5 step clinical plan, with drug names, doses (if appropriate), and a monitoring schedule.";
+      } else if (type === "followup") {
+        text =
+          "Suggest and answer the most important follow-up question a frontline clinician should ask next for this case.";
+      } else {
+        return;
+      }
+
+      sendMessage(text);
+    }
+
+    askBtn.addEventListener("click", () => sendMessage());
     promptEl.addEventListener("keydown", (e) => {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
@@ -678,23 +768,15 @@
     });
 
     resetBtn.addEventListener("click", () => {
-      history = [{ role: "system", content: SYSTEM_MESSAGE }];
+      history = [];
       renderMessages();
-      setStatus("Ready.");
+      setStatus("", "");
       promptEl.value = "";
       promptEl.focus();
-      // optional: clear snapshot on reset
       snapAge.value = "";
       snapWeight.value = "";
       snapHiv.value = "";
       snapPreg.value = "";
-    });
-
-    document.querySelectorAll(".pill").forEach((pill) => {
-      pill.addEventListener("click", () => {
-        promptEl.value = pill.textContent.trim();
-        promptEl.focus();
-      });
     });
 
     reasoningToggle.addEventListener("change", (e) => {
@@ -702,10 +784,7 @@
       renderMessages();
     });
 
-    // seed initial system message (5)
-    history = [{ role: "system", content: SYSTEM_MESSAGE }];
-    renderMessages();
-    setStatus("Ready.");
+    setStatus("", "");
   </script>
 </body>
 </html>
