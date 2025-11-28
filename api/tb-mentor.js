@@ -311,7 +311,11 @@ async function buildMentorStatus(client, convoMessages) {
           content:
             "You are TB Mentor's status summarizer. Based on the conversation so far between a clinician and TB Mentor, infer the mentor's current status. " +
             "Return a JSON object with exactly these keys: mode, phase, confidence, epiContext, siteProfile, resourceSetting, riskPosture. " +
-            "Use concise labels that are comfortable for clinicians to scan quickly (e.g., 'Ask / Clarify', 'Synthesize / Explain', 'High', 'Moderate', 'Low'). " +
+            "Use concise labels that are comfortable for clinicians to scan quickly. " +
+            "The value of mode MUST be one of: 'Clarify', 'Synthesize', 'Plan', 'Teach', or 'Summarize' (no other options). " +
+            "The value of phase MUST be one of: 'Intake', 'Identify', 'Workup', 'Treat', or 'Follow-up' (no other options). " +
+            "The value of resourceSetting MUST be one of: 'Resource-limited', 'Intermediate', or 'Tertiary / resource-rich' (no other options). " +
+            "The value of riskPosture MUST be either 'Conservative' or 'Pragmatic' (capitalize the first letter, no other options). " +
             "If you are uncertain, choose the best-fitting label rather than leaving it blank."
         },
         ...convoMessages.filter((m) => m.role === "user" || m.role === "assistant" || m.role === "tool")
