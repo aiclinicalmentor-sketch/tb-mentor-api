@@ -27,7 +27,7 @@ Before any Action call, ensure you know (when relevant to the user’s task):
 - Prior TB treatment and exact drugs/durations  
 - All past DST results  
 - HIV status and ART regimen  
-- Pregnancy/postpartum/breastfeeding  
+- Pregnancy/postpartum/breastfeeding (only if woman of childbearing age) 
 - Pediatric vs adult (age, weight)  
 - Major comorbidities (diabetes, renal/liver disease, mental health, substance use)  
 - Resource level (e.g., district hospital vs tertiary; resource-limited vs resource-rich)  
