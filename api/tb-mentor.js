@@ -209,6 +209,42 @@ const tools = [
   }
 ];
 
+
+function extractToolsUsed(messages) {
+  const used = new Set();
+  for (const m of messages) {
+    if (m.tool_calls && Array.isArray(m.tool_calls)) {
+      for (const c of m.tool_calls) {
+        if (c && c.function && c.function.name) {
+          used.add(c.function.name);
+        }
+      }
+    }
+  }
+  return Array.from(used);
+}
+
+async function getReasoningSummary(client, assistantContent) {
+  try {
+    const completion = await client.chat.completions.create({
+      model: "gpt-5.1",
+      temperature: 0,
+      messages: [
+        {
+          role: "system",
+          content:
+            "You summarize clinical reasoning. Produce a short 3–6 bullet chain-of-thought summary. Do not repeat the full answer; do not add disclaimers."
+        },
+        { role: "assistant", content: assistantContent }
+      ]
+    });
+    return completion.choices?.[0]?.message?.content || null;
+  } catch (err) {
+    console.warn("Reasoning summary error:", err?.message || err);
+    return null;
+  }
+}
+
 async function callRag(args) {
   const ragBase =
     process.env.TB_RAG_BASE_URL ||
@@ -342,9 +378,17 @@ export default async function handler(req, res) {
         continue;
       }
 
-      // No tool calls => final answer
+      // No more tool calls => final answer
       messages.push(msg);
-      return res.status(200).json({ output: msg.content });
+
+      const toolsUsed = extractToolsUsed(messages);
+      const reasoning = await getReasoningSummary(client, msg.content);
+
+      return res.status(200).json({
+        output: msg.content,
+        toolsUsed,
+        reasoning
+      });
     }
   } catch (err) {
     console.error("TB Mentor error:", err);

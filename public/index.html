@@ -48,7 +48,7 @@
       gap: 12px;
       flex-wrap: wrap;
       align-items: flex-start;
-      margin-bottom: 20px;
+      margin-bottom: 12px;
     }
     h1 { margin: 0; font-size: 28px; letter-spacing: -0.02em; }
     .badge {
@@ -61,15 +61,80 @@
       letter-spacing: 0.02em;
       border: 1px solid rgba(76, 201, 240, 0.4);
     }
-    .lead { color: var(--muted); margin: 6px 0 0; line-height: 1.55; max-width: 780px; }
-    .grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    .lead {
+      color: var(--muted);
+      margin: 6px 0 0;
+      line-height: 1.55;
+      max-width: 780px;
+      font-size: 14px;
+    }
+    .lead strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    /* Reasoning mode bar (1) */
+    .mode-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 10px 0 18px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .mode-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .mode-pill {
+      display: inline-flex;
+      flex-direction: column;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.85);
+      min-width: 130px;
+    }
+    .mode-pill-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+    .mode-pill-value {
+      font-size: 13px;
+    }
+    .mode-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .toggle-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .toggle-wrap input {
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.3fr);
+      gap: 16px;
+    }
     .card {
       background: var(--panel);
       border: 1px solid var(--border);
       border-radius: 14px;
       padding: 16px;
     }
-    .quickstarters { display: none; }
     .chat {
       display: flex;
       flex-direction: column;
@@ -85,20 +150,65 @@
       overflow-y: auto;
       scroll-behavior: smooth;
     }
+    .msg-block {
+      margin-bottom: 10px;
+    }
     .msg {
       max-width: 86%;
       padding: 12px 14px;
       border-radius: 12px;
-      margin-bottom: 10px;
       line-height: 1.5;
       font-size: 15px;
       white-space: pre-wrap;
       word-break: break-word;
     }
-    .msg.user { margin-left: auto; background: linear-gradient(135deg, #4cc9f0, #7c3aed); color: #0b1220; }
-    .msg.assistant { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border); }
-    .msg.system { background: rgba(255, 255, 255, 0.02); border: 1px dashed var(--border); color: var(--muted); }
-    .input-area { display: flex; gap: 10px; align-items: flex-start; }
+    .msg.user {
+      margin-left: auto;
+      background: linear-gradient(135deg, #4cc9f0, #7c3aed);
+      color: #0b1220;
+    }
+    .msg.assistant {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+    }
+    .msg.system {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px dashed var(--border);
+      color: var(--muted);
+    }
+    .assistant-meta {
+      margin-top: 4px;
+      margin-left: 4px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 6px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .tool-pill {
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,165,184,0.5);
+      background: rgba(15,23,42,0.9);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+    .reasoning-block {
+      margin-top: 6px;
+      margin-left: 4px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px dashed rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.85);
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .input-area {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
     textarea {
       flex: 1;
       min-height: 80px;
@@ -134,9 +244,29 @@
       transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
       white-space: nowrap;
     }
-    button:hover { transform: translateY(-1px); box-shadow: 0 16px 34px rgba(124, 58, 237, 0.28); }
-    button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
-    .status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 34px rgba(124, 58, 237, 0.28);
+    }
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    #resetBtn {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      box-shadow: none;
+      padding-inline: 12px;
+    }
+    .status {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 8px;
+      min-height: 18px;
+    }
     .error { color: #ff8a8a; }
     .success { color: #7ef7c6; }
     .row {
@@ -146,9 +276,100 @@
       flex-wrap: wrap;
       margin-top: 8px;
     }
+
+    /* Right column: case snapshot + quick starters (2 & 5) */
+    .quickstarters {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .section-title {
+      margin: 0;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+    .snapshot-help {
+      margin: 4px 0 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .snapshot-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 10px;
+      margin-bottom: 8px;
+    }
+    .snapshot-grid label {
+      font-size: 12px;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 2px;
+    }
+    .snapshot-grid input,
+    .snapshot-grid textarea {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text);
+      padding: 6px 8px;
+      font-size: 13px;
+      resize: vertical;
+      min-height: 28px;
+    }
+    .snapshot-grid textarea {
+      grid-column: 1 / -1;
+      min-height: 44px;
+    }
+    .snapshot-grid input:focus,
+    .snapshot-grid textarea:focus {
+      outline: none;
+      border-color: rgba(76, 201, 240, 0.7);
+      box-shadow: 0 0 0 2px rgba(76, 201, 240, 0.12);
+    }
+    .snapshot-footer {
+      margin-top: 4px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .samples-title {
+      margin: 10px 0 6px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .samples {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .pill {
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.9);
+      font-size: 12px;
+      color: var(--muted);
+      cursor: pointer;
+      transition: border 0.15s ease, background 0.15s ease, transform 0.1s ease;
+    }
+    .pill:hover {
+      border-color: rgba(76, 201, 240, 0.7);
+      background: rgba(15, 23, 42, 1);
+      transform: translateY(-0.5px);
+    }
+
     @media (max-width: 960px) {
-      .grid { grid-template-columns: 1fr; }
-      .chat-window { height: 420px; }
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      .chat-window {
+        height: 420px;
+      }
+      .mode-bar {
+        align-items: flex-start;
+      }
     }
   </style>
 </head>
@@ -160,56 +381,194 @@
           <div class="badge">Clinician-first</div>
           <h1>TB Mentor</h1>
         </div>
-        <p class="lead">Hold a conversation about a patient. Messages stay in context; calls run server-side with your configured credentials.</p>
+        <p class="lead">
+          Hold a conversation about a patient. <strong>Include age, weight, HIV status, pregnancy, TB history, comorbidities, current regimen and labs.</strong>
+          Ask specific questions (diagnosis, regimen choice, drug interactions, monitoring, or follow-up).
+        </p>
       </div>
-      <button id="resetBtn" style="background: transparent; color: var(--muted); border: 1px solid var(--border); box-shadow: none;">New conversation</button>
+      <button id="resetBtn">New conversation</button>
     </header>
 
-    <div class="grid">
-      <div class="card chat">
-        <div class="chat-window" id="chatWindow">
-          <div class="msg system">This assistant reasons over TB guidelines and your configured tools. It cannot see PHI beyond what you share.</div>
+    <!-- Reasoning mode bar (1 & 4) -->
+    <div class="mode-bar">
+      <div class="mode-pills">
+        <div class="mode-pill">
+          <span class="mode-pill-label">Mode</span>
+          <span class="mode-pill-value" id="modeLabel">Ask / Clarify</span>
         </div>
+        <div class="mode-pill">
+          <span class="mode-pill-label">Site setting</span>
+          <span class="mode-pill-value" id="siteLabel">MDR-TB referral hospital</span>
+        </div>
+        <div class="mode-pill">
+          <span class="mode-pill-label">Risk posture</span>
+          <span class="mode-pill-value" id="riskLabel">Standard</span>
+        </div>
+        <div class="mode-pill">
+          <span class="mode-pill-label">Learner level</span>
+          <span class="mode-pill-value" id="learnerLabel">Medical officer</span>
+        </div>
+      </div>
+      <div class="mode-right">
+        <label class="toggle-wrap">
+          <input type="checkbox" id="reasoningToggle">
+          <span>Show reasoning summary (when available)</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- Left: chat -->
+      <div class="card chat">
+        <div class="chat-window" id="chatWindow"></div>
         <div class="input-area">
-          <textarea id="prompt" placeholder="Share your case and question. Shift+Enter for a new line. Enter to send."></textarea>
+          <textarea
+            id="prompt"
+            placeholder="Example: 30-year-old HIV-negative man in Lesotho with RR-TB on month 2 of BDQ/LFX/LZD/Cfz, creatinine 1.8 mg/dL. Question: How should I adjust regimen and monitoring?"
+          ></textarea>
           <button id="askBtn">Send</button>
         </div>
         <div class="status" id="status">Ready.</div>
       </div>
 
+      <!-- Right: case snapshot + quick starters -->
       <div class="card quickstarters">
-        <p style="margin:0 0 10px; color: var(--muted);">Quick starters</p>
-        <div class="samples" id="samples">
-          <div class="pill">32-year-old with MDR-TB, HIV+, weight 54 kg, baseline creatinine elevated. How to adjust regimen and monitor renal function?</div>
-          <div class="pill">Pregnant patient (28 weeks) with TB/HIV coinfection and low CD4 — recommended regimen and fetal considerations?</div>
-          <div class="pill">Six-year-old exposed to MDR-TB, asymptomatic. Should I start preventive therapy and which regimen?</div>
-          <div class="pill">Adult with diabetes and smear-positive pulmonary TB starting rifampicin — drug interactions and monitoring plan?</div>
+        <div>
+          <p class="section-title">Case snapshot</p>
+          <p class="snapshot-help">
+            Key facts stay pinned here. You can edit at any time; this does not change previous messages.
+          </p>
+          <div class="snapshot-grid">
+            <div>
+              <label for="snapAge">Age / sex</label>
+              <input id="snapAge" type="text" placeholder="e.g., 30 y M">
+            </div>
+            <div>
+              <label for="snapWeight">Weight</label>
+              <input id="snapWeight" type="text" placeholder="e.g., 54 kg">
+            </div>
+            <div>
+              <label for="snapHiv">HIV status</label>
+              <input id="snapHiv" type="text" placeholder="e.g., HIV+, CD4 220">
+            </div>
+            <div>
+              <label for="snapPreg">Pregnancy</label>
+              <input id="snapPreg" type="text" placeholder="e.g., 1st trimester">
+            </div>
+            <div>
+              <label for="snapTb">TB profile</label>
+              <input id="snapTb" type="text" placeholder="e.g., new RR-TB, no SL exposure">
+            </div>
+            <div>
+              <label for="snapComorbid">Comorbidities</label>
+              <input id="snapComorbid" type="text" placeholder="e.g., diabetes, CKD">
+            </div>
+            <div>
+              <label for="snapRegimen">Current regimen</label>
+              <textarea id="snapRegimen" placeholder="e.g., BDQ LFX LZD Cfz, start date, planned duration"></textarea>
+            </div>
+            <div>
+              <label for="snapDanger">Danger signs / labs</label>
+              <textarea id="snapDanger" placeholder="e.g., RR 36, SpO2 90%, Cr 1.8, QTc 470 ms"></textarea>
+            </div>
+          </div>
+          <p class="snapshot-footer">
+            As you describe the case, the mentor will try to pre-fill age/HIV/pregnancy fields from your text.
+          </p>
+        </div>
+
+        <div>
+          <p class="samples-title">Quick starters</p>
+          <div class="samples" id="samples">
+            <div class="pill">
+              32-year-old with MDR-TB, HIV+, weight 54 kg, baseline creatinine elevated. How to adjust regimen and monitor renal function?
+            </div>
+            <div class="pill">
+              Pregnant patient (28 weeks) with TB/HIV coinfection and low CD4 — recommended regimen and fetal considerations?
+            </div>
+            <div class="pill">
+              Six-year-old exposed to MDR-TB, asymptomatic. Should I start preventive therapy and which regimen?
+            </div>
+            <div class="pill">
+              Adult with diabetes and smear-positive pulmonary TB starting rifampicin — drug interactions and monitoring plan?
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
   <script>
+    const SYSTEM_MESSAGE =
+      "This assistant reasons over TB guidelines and your configured tools. It cannot see PHI beyond what you share. " +
+      "Provide enough detail (age, HIV status, pregnancy, TB history, comorbidities, current regimen, key labs) for safe TB reasoning.";
+
     const promptEl = document.getElementById("prompt");
     const askBtn = document.getElementById("askBtn");
     const resetBtn = document.getElementById("resetBtn");
     const chatWindow = document.getElementById("chatWindow");
     const statusEl = document.getElementById("status");
+    const reasoningToggle = document.getElementById("reasoningToggle");
+
+    // Snapshot fields (2)
+    const snapAge = document.getElementById("snapAge");
+    const snapWeight = document.getElementById("snapWeight");
+    const snapHiv = document.getElementById("snapHiv");
+    const snapPreg = document.getElementById("snapPreg");
 
     let history = [];
     let sending = false;
+    let showReasoning = false;
 
     function scrollToBottom() {
       chatWindow.scrollTop = chatWindow.scrollHeight;
     }
 
+    function createMessageBlock(msg) {
+      const block = document.createElement("div");
+      block.className = "msg-block";
+
+      const bubble = document.createElement("div");
+      bubble.className = "msg " + (msg.role || "assistant");
+      bubble.textContent = msg.content;
+      block.appendChild(bubble);
+
+      if (msg.role === "assistant") {
+        // Tool usage tags (3)
+        if (Array.isArray(msg.toolsUsed) && msg.toolsUsed.length > 0) {
+          const meta = document.createElement("div");
+          meta.className = "assistant-meta";
+          const label = document.createElement("span");
+          label.textContent = "Used:";
+          meta.appendChild(label);
+
+          msg.toolsUsed.forEach((tool) => {
+            const pill = document.createElement("span");
+            pill.className = "tool-pill";
+            pill.textContent = tool;
+            meta.appendChild(pill);
+          });
+
+          block.appendChild(meta);
+        }
+
+        // Reasoning trace (4)
+        if (showReasoning && msg.reasoning) {
+          const reasoningDiv = document.createElement("div");
+          reasoningDiv.className = "reasoning-block";
+          reasoningDiv.textContent = msg.reasoning;
+          block.appendChild(reasoningDiv);
+        }
+      }
+
+      return block;
+    }
+
     function renderMessages() {
       chatWindow.innerHTML = "";
       for (const m of history) {
-        const div = document.createElement("div");
-        div.className = "msg " + (m.role || "assistant");
-        div.textContent = m.content;
-        chatWindow.appendChild(div);
+        const block = createMessageBlock(m);
+        chatWindow.appendChild(block);
       }
       scrollToBottom();
     }
@@ -219,11 +578,38 @@
       statusEl.className = "status" + (className ? " " + className : "");
     }
 
+    // very lightweight extraction for snapshot (2)
+    function updateSnapshotFromMessage(text) {
+      if (!text) return;
+
+      const ageMatch = text.match(/(\d{1,2})-year-old/i);
+      if (ageMatch && !snapAge.value) {
+        snapAge.value = ageMatch[1] + " y";
+      }
+
+      const weightMatch = text.match(/(\d{1,3})\s?(kg|kilograms?)/i);
+      if (weightMatch && !snapWeight.value) {
+        snapWeight.value = weightMatch[1] + " kg";
+      }
+
+      const hivPosMatch = text.match(/\bHIV\s*(\+|positive)/i);
+      const hivNegMatch = text.match(/\bHIV\s*(-|negative)/i);
+      if (!snapHiv.value) {
+        if (hivPosMatch) snapHiv.value = "HIV+";
+        else if (hivNegMatch) snapHiv.value = "HIV-negative";
+      }
+
+      const pregMatch = text.match(/pregnan\w*/i);
+      if (pregMatch && !snapPreg.value) {
+        snapPreg.value = "Pregnant";
+      }
+    }
+
     async function sendMessage() {
       if (sending) return;
       const message = promptEl.value.trim();
       if (!message) {
-        setStatus("Please enter a question.", "error");
+        setStatus("Please enter a case and question.", "error");
         return;
       }
 
@@ -231,7 +617,10 @@
       askBtn.disabled = true;
       setStatus("Thinking...");
 
-      // Add user message locally
+      // update snapshot heuristically (2)
+      updateSnapshotFromMessage(message);
+
+      // Add user message
       history.push({ role: "user", content: message });
       renderMessages();
       promptEl.value = "";
@@ -253,8 +642,22 @@
           return;
         }
 
-        const output = data.output || "No content returned.";
-        history.push({ role: "assistant", content: output });
+        const output =
+          typeof data.output === "string"
+            ? data.output
+            : data.output?.text || "No content returned.";
+
+        // Optional fields from backend for (3) and (4)
+        const toolsUsed = data.toolsUsed || data.tools || [];
+        const reasoning =
+          data.reasoningSummary || data.reasoning_summary || data.reasoning || null;
+
+        history.push({
+          role: "assistant",
+          content: output,
+          toolsUsed,
+          reasoning
+        });
         renderMessages();
         setStatus("Answer ready.", "success");
       } catch (err) {
@@ -275,11 +678,16 @@
     });
 
     resetBtn.addEventListener("click", () => {
-      history = [{ role: "system", content: "This assistant reasons over TB guidelines and your configured tools. It cannot see PHI beyond what you share." }];
+      history = [{ role: "system", content: SYSTEM_MESSAGE }];
       renderMessages();
       setStatus("Ready.");
       promptEl.value = "";
       promptEl.focus();
+      // optional: clear snapshot on reset
+      snapAge.value = "";
+      snapWeight.value = "";
+      snapHiv.value = "";
+      snapPreg.value = "";
     });
 
     document.querySelectorAll(".pill").forEach((pill) => {
@@ -289,8 +697,13 @@
       });
     });
 
-    // seed initial system message
-    history = [{ role: "system", content: "This assistant reasons over TB guidelines and your configured tools. It cannot see PHI beyond what you share." }];
+    reasoningToggle.addEventListener("change", (e) => {
+      showReasoning = e.target.checked;
+      renderMessages();
+    });
+
+    // seed initial system message (5)
+    history = [{ role: "system", content: SYSTEM_MESSAGE }];
     renderMessages();
     setStatus("Ready.");
   </script>
