@@ -376,6 +376,8 @@ async function callTda(args) {
     process.env.TB_TDA_FORCE_REMOTE === "1";
   if (!forceRemote) {
     const { derived, ...result } = computePediatricTbTdaScore(args);
+    console.log("[tb-mentor][tda-local] request", JSON.stringify(args));
+    console.log("[tb-mentor][tda-local] result", JSON.stringify(result));
     return result;
   }
 

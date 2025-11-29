@@ -285,6 +285,39 @@ CXR JSON REPRESENTATION:
 - Do NOT send an empty object {} for a normal CXR.
 - Only omit cxr (or send {}) when no CXR was done → Algorithm B.
 
+
+SEMANTIC MAPPING RULE (UNIVERSAL):
+
+ADDITIONAL SEMANTIC MAPPING RULES (GLOBAL):
+
+- **Weight loss / Poor weight gain / Failure to thrive (FTT)**:
+  Any mention of "poor weight gain", "not growing well", "weight loss", "failure to thrive", "FTT", "wasting", "malnutrition", 
+  or "underweight for age" → `symptoms.weight_loss_or_ftt = true`.
+
+- **Night sweats**:
+  Any mention of "night sweats", "sweating at night", "drenching sweats" → `symptoms.night_sweats = true`.
+
+- **Lethargy / Fatigue / Low energy**:
+  Terms such as "lethargic", "fatigued", "low energy", "weak", "appears tired", 
+  or "reduced activity" → `symptoms.lethargy = true`.
+
+- **Tachypnoea**:
+  Phrases like "fast breathing", "increased respiratory rate", "tachypnea", "breathing quickly", 
+  or numeric RR above age norms → `derived.tachypnoea = true`.
+
+- **Tachycardia**:
+  Terms like "fast heart rate", "tachycardia", "pulse elevated" or HR above age norms → `derived.tachycardia = true`.
+
+- **Swollen lymph nodes (as previously defined)**:
+  Any mention of lymphadenopathy in any location → `symptoms.swollen_nodes = true`.
+
+These rules instruct the model to map common pediatric and clinical language into TDA flags using medical reasoning,
+not exact lexical matching.
+
+
+- When mapping natural language to TDA boolean flags, treat standard clinical terminology as equivalent.
+- “Lymphadenopathy” (cervical, axillary, inguinal, supraclavicular, generalized) → swollen_nodes = true.
+- Use clinical knowledge: do NOT require exact lexical matches.
 JSON FORMAT:
 {algorithm, age_band, symptoms{…}, vitals{…}, cxr{…}, derived{…}} with the appropriate flags.
 
