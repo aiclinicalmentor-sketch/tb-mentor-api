@@ -1,9 +1,10 @@
 // api/tb-rag-query.js
 // TB Clinical Mentor RAG endpoint with table-aware CSV loading and rendering.
 
-const fs = require("fs");
-const path = require("path");
-const Papa = require("papaparse");
+import fs from "fs";
+import path from "path";
+import Papa from "papaparse";
+import Npyjs from "npyjs";
 
 let RAG_STORE = null;
 
@@ -45,7 +46,6 @@ async function loadEmbeddings(ragDir) {
   }
 
   if (fs.existsSync(embeddingsNpyPath)) {
-    const { default: Npyjs } = require("npyjs");
     const npy = new Npyjs();
     const buf = fs.readFileSync(embeddingsNpyPath);
     const ab = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
@@ -1797,7 +1797,7 @@ function mixByContentType(entries, chunks, config) {
 
 // ---------- Main handler ----------
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.statusCode = 405;
     res.setHeader("Content-Type", "application/json");
@@ -2306,4 +2306,4 @@ module.exports = async (req, res) => {
       })
     );
   }
-};
+}
