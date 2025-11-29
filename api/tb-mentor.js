@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import OpenAI from "openai";
+import { computePediatricTbTdaScore } from "./tb_peds_tda.js";
 
 /**
  * TB Mentor API route
@@ -370,14 +371,15 @@ async function callRag(args) {
 }
 
 async function callTda(args) {
-  const tdaBase =
-    process.env.TB_TDA_BASE_URL ||
-    process.env.TB_MENTOR_BASE_URL ||
-    "";
+  // Default to local computation to avoid network hops when tb_peds_tda lives alongside this file.
+  if (!process.env.TB_TDA_BASE_URL) {
+    const { derived, ...result } = computePediatricTbTdaScore(args);
+    return result;
+  }
+
+  const tdaBase = process.env.TB_TDA_BASE_URL;
   const tdaKey =
-    process.env.TB_TDA_API_KEY ||
-    process.env.TB_PEDS_TDA_API_KEY ||
-    null;
+    process.env.TB_TDA_API_KEY || process.env.TB_PEDS_TDA_API_KEY || null;
 
   const headers = { "Content-Type": "application/json" };
   if (tdaKey) headers.Authorization = `Bearer ${tdaKey}`;
