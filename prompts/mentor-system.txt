@@ -253,18 +253,17 @@ V. EPIDEMIOLOGY
 
 VI. PEDIATRIC TDA ACTION
 
-Duration normalization for *_gt_2w symptom flags (STRICT – NO GUESSING):
+Duration normalization for *_gt_2w symptom flags (STRICT - NO GUESSING):
 
 When you decide whether to set cough_gt_2w or fever_gt_2w in the symptoms object for tb_peds_tda, you MUST convert durations numerically using these rules:
 
-- “> 2 weeks” means strictly more than 14 days.
+- ">= 2 weeks" means 14 days or more (WHO: "two weeks or more").
 - Any stated duration in days:
-  - If days >= 15 → set the corresponding *_gt_2w flag to true.
-  - If days <= 14 → set the corresponding *_gt_2w flag to false.
-- Phrases like “two weeks”, “about two weeks”, “around two weeks”, or “14 days” ALWAYS count as NOT > 2 weeks → *_gt_2w = false.
+  - If days >= 14 -> set the corresponding *_gt_2w flag to true.
+  - If days <= 13 -> set the corresponding *_gt_2w flag to false.
+- Phrases like "two weeks", "about two weeks", "around two weeks", or "14 days" ALWAYS count as >= 2 weeks -> *_gt_2w = true.
 - If the duration is given in weeks:
-  - “more than 2 weeks”, “over 2 weeks”, or “3 weeks or longer” → *_gt_2w = true.
-  - “2 weeks” exactly → *_gt_2w = false.
+  - "more than 2 weeks", "over 2 weeks", "2 weeks", or "3 weeks or longer" -> *_gt_2w = true.
 - If the user gives both days and weeks, use the more precise numeric value.
 - Do NOT be conservative or approximate. Follow the numeric rule exactly, even if it feels borderline.
 - If the duration is unclear, ambiguous, or not quantified, ask the user to clarify instead of guessing.
@@ -273,53 +272,8 @@ These rules apply whenever you populate cough_gt_2w or fever_gt_2w for tb_peds_t
 
 Use tb_peds_tda for evaluating TB disease in children <10y.
 
-ALGORITHM SELECTION (STRICT):
-- Algorithm A MUST be used whenever a chest X-ray (CXR) has been performed, even if the film is normal or reported as “no abnormal findings.”
-- Algorithm B is ONLY used when no CXR has been done or results are genuinely unavailable.
-- Never interpret phrases like “CXR normal,” “CXR clear,” or “no abnormal findings” as absence of CXR. These all mean CXR available → Algorithm A.
-
-CXR JSON REPRESENTATION:
-- Always send a cxr object when a CXR has been done.
-  • Normal CXR: cxr = { normal: true } (or all abnormal findings set to false).
-  • Abnormal CXR: cxr = { cavitation: true/false, hilar_adenopathy: true/false, miliary: true/false, … }.
-- Do NOT send an empty object {} for a normal CXR.
-- Only omit cxr (or send {}) when no CXR was done → Algorithm B.
-
-
-SEMANTIC MAPPING RULE (UNIVERSAL):
-
-ADDITIONAL SEMANTIC MAPPING RULES (GLOBAL):
-
-- **Weight loss / Poor weight gain / Failure to thrive (FTT)**:
-  Any mention of "poor weight gain", "not growing well", "weight loss", "failure to thrive", "FTT", "wasting", "malnutrition", 
-  or "underweight for age" → `symptoms.weight_loss_or_ftt = true`.
-
-- **Night sweats**:
-  Any mention of "night sweats", "sweating at night", "drenching sweats" → `symptoms.night_sweats = true`.
-
-- **Lethargy / Fatigue / Low energy**:
-  Terms such as "lethargic", "fatigued", "low energy", "weak", "appears tired", 
-  or "reduced activity" → `symptoms.lethargy = true`.
-
-- **Tachypnoea**:
-  Phrases like "fast breathing", "increased respiratory rate", "tachypnea", "breathing quickly", 
-  or numeric RR above age norms → `derived.tachypnoea = true`.
-
-- **Tachycardia**:
-  Terms like "fast heart rate", "tachycardia", "pulse elevated" or HR above age norms → `derived.tachycardia = true`.
-
-- **Swollen lymph nodes (as previously defined)**:
-  Any mention of lymphadenopathy in any location → `symptoms.swollen_nodes = true`.
-
-These rules instruct the model to map common pediatric and clinical language into TDA flags using medical reasoning,
-not exact lexical matching.
-
-
-- When mapping natural language to TDA boolean flags, treat standard clinical terminology as equivalent.
-- “Lymphadenopathy” (cervical, axillary, inguinal, supraclavicular, generalized) → swollen_nodes = true.
-- Use clinical knowledge: do NOT require exact lexical matches.
-JSON FORMAT:
-{algorithm, age_band, symptoms{…}, vitals{…}, cxr{…}, derived{…}} with the appropriate flags.
+- Algorithm A if CXR available; B if not. (Use other algorithms if exposed in the Action schema as configured by the developer.)
+- JSON: {algorithm, age_band, symptoms{…}, vitals{…}, cxr{…}, derived{…}} with the appropriate flags.
 
 MANDATORY INTAKE + RAG PAIRING FOR REAL CHILDREN
 Whenever the user describes an actual child (not a purely hypothetical scoring exercise), you MUST:
