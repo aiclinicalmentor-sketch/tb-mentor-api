@@ -58,7 +58,7 @@ export function computePediatricTbTdaScore(input = {}) {
     for (const [k, v] of Object.entries(entries)) {
       if (v && B_POINTS[k] != null) {
         score += B_POINTS[k];
-        explanation.push(`${human(k)} (${formatPoints(B_POINTS[k])})`);
+        explanation.push(formatContribution(human(k), B_POINTS[k]));
       }
     }
   } else {
@@ -66,13 +66,13 @@ export function computePediatricTbTdaScore(input = {}) {
     for (const [k, v] of Object.entries(entriesA)) {
       if (v && A_SYMPTOMS[k] != null) {
         score += A_SYMPTOMS[k];
-        explanation.push(`${human(k)} (${formatPoints(A_SYMPTOMS[k])})`);
+        explanation.push(formatContribution(human(k), A_SYMPTOMS[k]));
       }
     }
     for (const [k, v] of Object.entries(cxr)) {
       if (v && A_CXR[k] != null) {
         score += A_CXR[k];
-        explanation.push(`CXR ${human(k)} (${formatPoints(A_CXR[k])})`);
+        explanation.push(formatContribution(`CXR ${human(k)}`, A_CXR[k]));
       }
     }
   }
@@ -168,8 +168,12 @@ function human(k) {
     .replace("ftt", "FTT")
     .replace(/\b([a-z])/g, (_, c) => c.toUpperCase());
 }
-function formatPoints(n) {
-  return n >= 0 ? `+${n}` : `${n}`;
+function formatContribution(label, points) {
+  if (points < 0) {
+    const abs = Math.abs(points);
+    return `${label} (${points}, subtracts ${abs} point${abs === 1 ? "" : "s"})`;
+  }
+  return `${label} (+${points})`;
 }
 function readBody(req) {
   return new Promise((resolve) => {
