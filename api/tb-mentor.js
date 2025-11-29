@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import OpenAI from "openai";
 import { computePediatricTbTdaScore } from "./tb_peds_tda.js";
+import ragHandler from "./tb-rag-query.js";
 
 /**
  * TB Mentor API route
@@ -341,13 +342,57 @@ async function buildMentorStatus(client, convoMessages) {
   }
 }
 
+async function callLocalRag(args) {
+  const req = { method: "POST", body: args, headers: {} };
+
+  const { statusCode, body } = await new Promise((resolve, reject) => {
+    const res = {
+      statusCode: 200,
+      headers: {},
+      setHeader(key, value) {
+        this.headers[key] = value;
+      },
+      end(chunk = "") {
+        resolve({ statusCode: this.statusCode, body: chunk.toString() });
+      }
+    };
+
+    Promise.resolve(ragHandler(req, res)).catch(reject);
+  });
+
+  let parsed;
+  try {
+    parsed = body ? JSON.parse(body) : {};
+  } catch (err) {
+    throw new Error(`tb-rag-query local parse error: ${err.message}`);
+  }
+
+  if (statusCode >= 400) {
+    const detail = parsed?.error || body || "Unknown error";
+    throw new Error(`tb-rag-query error: ${statusCode} ${detail}`);
+  }
+
+  return parsed;
+}
+
 async function callRag(args) {
+  const forceRemote =
+    (process.env.TB_RAG_FORCE_REMOTE || "").toLowerCase() === "true" ||
+    process.env.TB_RAG_FORCE_REMOTE === "1";
+
+  if (!forceRemote) {
+    return await callLocalRag(args);
+  }
+
   const ragBase =
-    process.env.TB_RAG_BASE_URL ||
-    process.env.TB_MENTOR_BASE_URL ||
-    "";
-  const ragKey =
-    process.env.TB_RAG_API_KEY || process.env.TB_RAG_AUTH || null;
+    process.env.TB_RAG_BASE_URL || process.env.TB_MENTOR_BASE_URL || "";
+  if (!ragBase) {
+    throw new Error(
+      "TB_RAG_FORCE_REMOTE is set but no TB_RAG_BASE_URL/TB_MENTOR_BASE_URL provided"
+    );
+  }
+
+  const ragKey = process.env.TB_RAG_API_KEY || process.env.TB_RAG_AUTH || null;
 
   const headers = { "Content-Type": "application/json" };
   if (ragKey) headers.Authorization = `Bearer ${ragKey}`;
