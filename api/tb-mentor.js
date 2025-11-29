@@ -371,13 +371,18 @@ async function callRag(args) {
 }
 
 async function callTda(args) {
-  // Default to local computation to avoid network hops when tb_peds_tda lives alongside this file.
-  if (!process.env.TB_TDA_BASE_URL) {
+  // Default to local computation; only call remote if explicitly forced.
+  const forceRemote = (process.env.TB_TDA_FORCE_REMOTE || "").toLowerCase() === "true" ||
+    process.env.TB_TDA_FORCE_REMOTE === "1";
+  if (!forceRemote) {
     const { derived, ...result } = computePediatricTbTdaScore(args);
     return result;
   }
 
-  const tdaBase = process.env.TB_TDA_BASE_URL;
+  const tdaBase = process.env.TB_TDA_BASE_URL || process.env.TB_MENTOR_BASE_URL || "";
+  if (!tdaBase) {
+    throw new Error("TB_TDA_FORCE_REMOTE is set but no TB_TDA_BASE_URL/TB_MENTOR_BASE_URL provided");
+  }
   const tdaKey =
     process.env.TB_TDA_API_KEY || process.env.TB_PEDS_TDA_API_KEY || null;
 
