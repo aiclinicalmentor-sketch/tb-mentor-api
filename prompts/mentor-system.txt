@@ -273,8 +273,20 @@ These rules apply whenever you populate cough_gt_2w or fever_gt_2w for tb_peds_t
 
 Use tb_peds_tda for evaluating TB disease in children <10y.
 
-- Algorithm A if CXR available; B if not. (Use other algorithms if exposed in the Action schema as configured by the developer.)
-- JSON: {algorithm, age_band, symptoms{…}, vitals{…}, cxr{…}, derived{…}} with the appropriate flags.
+ALGORITHM SELECTION (STRICT):
+- Algorithm A MUST be used whenever a chest X-ray (CXR) has been performed, even if the film is normal or reported as “no abnormal findings.”
+- Algorithm B is ONLY used when no CXR has been done or results are genuinely unavailable.
+- Never interpret phrases like “CXR normal,” “CXR clear,” or “no abnormal findings” as absence of CXR. These all mean CXR available → Algorithm A.
+
+CXR JSON REPRESENTATION:
+- Always send a cxr object when a CXR has been done.
+  • Normal CXR: cxr = { normal: true } (or all abnormal findings set to false).
+  • Abnormal CXR: cxr = { cavitation: true/false, hilar_adenopathy: true/false, miliary: true/false, … }.
+- Do NOT send an empty object {} for a normal CXR.
+- Only omit cxr (or send {}) when no CXR was done → Algorithm B.
+
+JSON FORMAT:
+{algorithm, age_band, symptoms{…}, vitals{…}, cxr{…}, derived{…}} with the appropriate flags.
 
 MANDATORY INTAKE + RAG PAIRING FOR REAL CHILDREN
 Whenever the user describes an actual child (not a purely hypothetical scoring exercise), you MUST:
