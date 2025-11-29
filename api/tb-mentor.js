@@ -380,19 +380,33 @@ async function callRag(args) {
     (process.env.TB_RAG_FORCE_REMOTE || "").toLowerCase() === "true" ||
     process.env.TB_RAG_FORCE_REMOTE === "1";
 
-  if (!forceRemote) {
-    return await callLocalRag(args);
-  }
-
   const ragBase =
     process.env.TB_RAG_BASE_URL || process.env.TB_MENTOR_BASE_URL || "";
-  if (!ragBase) {
-    throw new Error(
-      "TB_RAG_FORCE_REMOTE is set but no TB_RAG_BASE_URL/TB_MENTOR_BASE_URL provided"
-    );
+  const ragKey = process.env.TB_RAG_API_KEY || process.env.TB_RAG_AUTH || null;
+
+  if (!forceRemote) {
+    try {
+      return await callLocalRag(args);
+    } catch (err) {
+      const canFallback =
+        ragBase &&
+        (err?.code === "ENOENT" ||
+          (typeof err?.message === "string" && err.message.includes("ENOENT")));
+      if (!canFallback) {
+        throw err;
+      }
+      console.warn(
+        "[tb-mentor][rag] local store unavailable; falling back to remote:",
+        err?.code || err?.message || err
+      );
+    }
   }
 
-  const ragKey = process.env.TB_RAG_API_KEY || process.env.TB_RAG_AUTH || null;
+  if (!ragBase) {
+    throw new Error(
+      "TB_RAG_FORCE_REMOTE is set or local RAG failed but no TB_RAG_BASE_URL/TB_MENTOR_BASE_URL provided"
+    );
+  }
 
   const headers = { "Content-Type": "application/json" };
   if (ragKey) headers.Authorization = `Bearer ${ragKey}`;
